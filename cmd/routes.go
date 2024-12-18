@@ -2,13 +2,16 @@ package main
 
 import (
   "net/http"
+  "log"
+  "github.com/myshkins/ak0_2/internal/handlers"
 )
+
 func addRoutes(
   mux *http.ServeMux,
   // some dependencies here, eg.
-  // logger *logging.Logger,
+  logger *log.Logger,
   // config Config,
   // authProxy *authProxy
 ) {
-  // mux.Handle("/", handleHome(logger))
+  mux.Handle("/", handlers.HandleHome(logger))
 }

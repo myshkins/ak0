@@ -1,0 +1,3 @@
+module github.com/myshkins/ak0_2
+
+go 1.22.8
