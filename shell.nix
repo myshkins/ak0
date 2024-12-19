@@ -1,12 +1,9 @@
-let
-  pkgs = import <nixpkgs> {};
-  go = pkgs.go;
-  gopls = pkgs.gopls;
-
-in pkgs.mkShell {
-  packages = [
-    go
-    gopls
-  ];
-
-  }
+{ pkgs ? import <nixpkgs> {} }:
+  pkgs.mkShell {
+    nativeBuildInputs = with pkgs.buildPackages; [
+      go
+      gopls
+      reflex
+    ];
+}
+  

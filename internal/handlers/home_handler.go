@@ -19,7 +19,7 @@ func HandleHome(logger *log.Logger) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
       // handle the request here
-      fmt.Fprint(w, "hewo myshy, you requested: %s\n", r.URL.Path)
+      fmt.Fprintf(w, "hewo myshy! you requested: %s\n", r.URL.Path)
       logger.Println("handling home")
 		},
 	)
