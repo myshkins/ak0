@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:svgjs="http://svgjs.dev/svgjs" width="1000" height="1000" viewBox="0 0 100 100">
+    <rect width="1000" height="1000" fill="#ffffff"></rect>
+    <g transform="matrix(0.7,0,0,0.7,150,281.25)"><svg viewBox="0 0 512 320" data-background-color="#ffffff"
+            preserveAspectRatio="xMidYMid meet" height="625" width="1000" xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink">
+            <defs></defs>
+            <g id="tight-bounds" transform="matrix(1,0,0,1,0,0)"><svg viewBox="0 0 512 320" height="320" width="512">
+                    <g><svg></svg></g>
+                    <g><svg viewBox="0 0 512 320" height="320" width="512">
+                            <g>
+                                <path d="M96 320l0-320 320 0 0 320zM402.759 306.759v-293.518l-293.518 0 0 293.518z"
+                                    fill="#60d9c9" data-fill-palette-color="tertiary"></path>
+                            </g>
+                            <g transform="matrix(1,0,0,1,140.8,80.30254545454544)"><svg
+                                    viewBox="0 0 230.4 159.39490909090912" height="159.39490909090912" width="230.4">
+                                    <g><svg viewBox="0 0 230.4 159.39490909090912" height="159.39490909090912"
+                                            width="230.4">
+                                            <g><svg viewBox="0 0 230.4 159.39490909090912" height="159.39490909090912"
+                                                    width="230.4">
+                                                    <g><svg viewBox="0 0 230.4 159.39490909090912"
+                                                            height="159.39490909090912" width="230.4">
+                                                            <g><svg viewBox="0 0 230.4 159.39490909090912"
+                                                                    height="159.39490909090912" width="230.4">
+                                                                    <g transform="matrix(1,0,0,1,0,0)"><svg
+                                                                            width="230.4"
+                                                                            viewBox="0.8999999761581421 -35.04999923706055 55 35.04999923706055"
+                                                                            height="159.39490909090912"
+                                                                            data-palette-color="#60d9c9"><svg></svg>
+                                                                            <g class="undefined-text-0"
+                                                                                data-fill-palette-color="primary"
+                                                                                id="text-0">
+                                                                                <path
+                                                                                    d="M5.85 0v-1.5h18.4l-10.6-29.15-11.15 30.65h-1.6l12.75-35.05 12.75 35.05zM32.25-35h1.5v35h-1.5zM52.15-35h2.15l-16.8 16.7 18.4 18.3h-2.15l-18.4-18.3z"
+                                                                                    data-fill-palette-color="primary"
+                                                                                    fill="#60d9c9" opacity="1"></path>
+                                                                            </g>
+                                                                        </svg></g>
+                                                                </svg></g>
+                                                        </svg></g>
+                                                </svg></g>
+                                        </svg></g>
+                                </svg></g>
+                        </svg></g>
+                </svg>
+                <rect width="512" height="320" fill="none" stroke="none" visibility="hidden"></rect>
+            </g>
+        </svg></g>
+</svg>
