@@ -1,0 +1,39 @@
+.navbar {
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+}
+
+.logo {
+  margin-left: 3rem;
+  height: clamp(90px, 15vh, 140px);
+  transition: all .1s ease-in;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 0.75rem #858bfb);
+}
+
+.nav-links {
+  padding: 1rem;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  margin-right: 2rem;
+  gap: .2rem;
+}
+
+.nav-link {
+  transition: all .1s ease-in;
+}
+
+.nav-link:hover {
+  filter: drop-shadow(0 0 0.75rem var(--aqua-light))
+}
+
+@media screen and (min-width: 768px) {
+  .logo {
+      height: clamp(90px, 17gitvh, 170px)
+  }
+}

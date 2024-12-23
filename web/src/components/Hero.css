@@ -1,0 +1,35 @@
+.hero {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  margin: 4rem auto 0;
+}
+
+.selfie-wrap {
+  display: flex;
+  flex-direction: column;
+  margin-left: 1rem;
+}
+
+.selfie {
+  width: 140px;
+}
+
+.hero-desktop-text {
+  display: none;
+}
+
+@media screen and (min-width: 768px) {
+  .hero-desktop-text {
+    display: block;
+    width: clamp(15rem, 35vw, 20rem);
+    margin: 0 clamp(1rem, 5vw, 6rem) 2.5rem;
+  }
+
+  .selfie-wrap {
+    margin-left: auto;
+  }
+  .selfie {
+    width: clamp(10rem, 15vw, 11rem)
+  }
+}

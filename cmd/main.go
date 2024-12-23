@@ -11,9 +11,11 @@ import (
 	"sync"
 	"time"
   "log"
+
+  "github.com/myshkins/ak0_2/internal/middleware"
+  "github.com/myshkins/ak0_2/internal/logger"
 )
 
-var logger = log.New(os.Stdout, "log_ak0_2: ", log.Ldate)
 
 func NewServer(
   logger *log.Logger,
@@ -25,7 +27,8 @@ func NewServer(
   addRoutes(mux, logger)
 
   var handler http.Handler = mux
-  // handler = someMiddleware(handler)
+  handler = middleware.LoggingMiddleWare(handler)
+  // handler = metricsMiddleware(handler)
   return handler
 }
 
@@ -33,7 +36,7 @@ func run(ctx context.Context, w io.Writer, args []string) error {
   ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
   defer cancel()
   
-  srv := NewServer(logger)
+  srv := NewServer(logger.Logger)
   httpServer := &http.Server{
     // Addr: net.JoinHostPort(config.Host, config.Port),
     Addr: net.JoinHostPort("127.0.0.1", "8200"),

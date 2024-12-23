@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 )
@@ -9,11 +8,11 @@ import (
 func HandleHome(logger *log.Logger) http.Handler {
   // do necessary prep work here
   log.Println("HandleHome was called")
-	return http.HandlerFunc(
-		func(w http.ResponseWriter, r *http.Request) {
-      fmt.Fprintf(w, "hewo myshy! you requested: %s\n", r.URL.Path)
-      logger.Println("handling home")
-		},
-	)
+  fs := http.FileServer(http.Dir("/home/myshkins/projects/ak0_2/web/dist"))
+  fsWrapper := func() http.Handler {
+    log.Println("fsWrapper was called")
+    return fs
+  }
+  return fsWrapper()
 }
 
