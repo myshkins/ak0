@@ -1,8 +1,11 @@
 package logger
 
 import (
-  "log"
+  "log/slog"
   "os"
 )
 
-var Logger = log.New(os.Stdout, "log_ak0_2: ", log.Ldate)
+var Logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
+
+// todo: implement debug logging, so when in dev info logs go to file, but also log to stdout
+

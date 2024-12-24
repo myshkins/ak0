@@ -10,7 +10,7 @@ import (
 	"os/signal"
 	"sync"
 	"time"
-  "log"
+  "log/slog"
 
   "github.com/myshkins/ak0_2/internal/middleware"
   "github.com/myshkins/ak0_2/internal/logger"
@@ -18,7 +18,7 @@ import (
 
 
 func NewServerHandler(
-  logger *log.Logger,
+  logger *slog.Logger,
   // config *Config
   // commentStore *commentStore
   // anotherStore *anotherStore
@@ -47,7 +47,8 @@ func run(ctx context.Context, w io.Writer, args []string) error {
   }
 
   go func() {
-    log.Printf("listening on %s\n", httpServer.Addr)
+    // logger.Logger.Info("listening on %s\n", httpServer.Addr)
+    fmt.Printf("listening on %s\n", httpServer.Addr)
     if err := httpServer.ListenAndServe(); err != nil {
       fmt.Fprintf(os.Stderr, "error listening and serving: %s\n", err)
     }
