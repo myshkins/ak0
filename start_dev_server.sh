@@ -4,4 +4,4 @@ script_path=$(dirname "$script")
 
 cd script_path
 
-reflex -R 'cmd$' -R '^web/dist.*' -s -- sh -c './build_frontend.sh && cd cmd && go build && ./cmd'
+reflex -R 'cmd$' -R '.*vite.*' -R '.*dist.*' -s --verbose=true -- sh -c './build_frontend.sh && cd cmd && go build && ./cmd'

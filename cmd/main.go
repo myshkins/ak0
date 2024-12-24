@@ -17,7 +17,7 @@ import (
 )
 
 
-func NewServer(
+func NewServerHandler(
   logger *log.Logger,
   // config *Config
   // commentStore *commentStore
@@ -36,8 +36,11 @@ func run(ctx context.Context, w io.Writer, args []string) error {
   ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
   defer cancel()
   
-  srv := NewServer(logger.Logger)
+  srv := NewServerHandler(logger.Logger)
   httpServer := &http.Server{
+    ReadTimeout: 120 * time.Second,
+    WriteTimeout: 120 * time.Second,
+    IdleTimeout: 120 * time.Second,
     // Addr: net.JoinHostPort(config.Host, config.Port),
     Addr: net.JoinHostPort("127.0.0.1", "8200"),
     Handler: srv,
