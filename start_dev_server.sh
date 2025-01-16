@@ -1,7 +1,8 @@
 #!/bin/sh
 script=$(readlink -f "$0")
 script_path=$(dirname "$script")
+echo $script_path
 
-cd script_path
+cd $script_path
 
-reflex -R 'cmd$' -R '.*vite.*' -R '.*dist.*' -s --verbose=true -- sh -c './build_frontend.sh && cd cmd && go build && ./cmd'
+reflex -R 'cmd$' -R '.*vite.*' -R '.*dist.*' -s --verbose=true -- sh -c './build_frontend.sh && cd cmd/ak0_2 && go build && ./ak0_2'

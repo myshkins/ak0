@@ -4,6 +4,7 @@
       go
       gopls
       nodejs_22
+      nil
       reflex
     ];
 
