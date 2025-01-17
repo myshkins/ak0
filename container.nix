@@ -30,7 +30,7 @@ let
           nginxConf
         ];
         ExposedPorts = {
-          "${nginxPort}/tcp" = { };
+          # "${nginxPort}/tcp" = { };
         };
       };
     };
