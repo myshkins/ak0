@@ -52,6 +52,9 @@
           ];
           config = {
             Cmd = [ "/ak0_2"];
+            ExposedPorts = {
+              "8200/tcp" = {};
+            };
           };
         };
       };
