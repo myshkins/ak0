@@ -5,7 +5,6 @@
     # nixpkgs.url = "nixpkgs/nixos-21.11";
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    # flake-utils.url = "github.numtide/flake-utils";
   };
 
   outputs = { self, nixpkgs, flake-utils }:
@@ -14,11 +13,6 @@
         lastModifiedDate = self.lastModifiedDate or self.lastModified or "19700101";
         version = builtins.substring 0 8 lastModifiedDate;
         pkgs = import nixpkgs { inherit system; };
-        # supportedSystems = [ "x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin" ];
-        # Helper function to generate an attrset '{ x86_64-linux = f "x86_64-linux"; ... }'.
-        # forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-        # Nixpkgs instantiated for supported system types.
-        # nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
 
     in {
       packages = {
@@ -29,19 +23,19 @@
           vendorHash = null;
         };
 
-        frontend = pkgs.stdenv.mkDerivation {
+        frontend = pkgs.buildNpmPackage {
           pname = "ak0_2-frontend";
           version = "0.0.1";
           src = ./web;
-          buildInputs = [ pkgs.nodejs_23 ];
-          buildPhase = ''
-            npm install --verbose
-            npm run build
-          '';
-          installPhase = ''
-            mkdir -p $out
-            cp -r dist/* $out/
-          '';
+          npmDepsHash = "sha256-InkMefNQA6e3Ul8PY8pkpXSCqaysGh10t7C683AS5LA=";
+          npmPackFlags = [ "--ignore-scripts" ];
+          NODE_OPTIONS = "--openssl-legacy-provider";
+          meta = {
+            description = "";
+            homepage = "";
+            # license =
+            # maintainers =
+          };
         };
 
         docker = pkgs.dockerTools.buildLayeredImage {
