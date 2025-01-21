@@ -42,7 +42,7 @@ func run(ctx context.Context, w io.Writer, args []string) error {
     WriteTimeout: 120 * time.Second,
     IdleTimeout: 120 * time.Second,
     // Addr: net.JoinHostPort(config.Host, config.Port),
-    Addr: net.JoinHostPort("127.0.0.1", "8200"),
+    Addr: net.JoinHostPort("0.0.0.0", "8200"),
     Handler: srv,
   }
 

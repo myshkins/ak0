@@ -2,4 +2,6 @@
 **/dist/
 
 examples.nix
+ak0_2^
+!ak0_2/
 result

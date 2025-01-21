@@ -28,32 +28,31 @@
           version = "0.0.1";
           src = ./web;
           npmDepsHash = "sha256-InkMefNQA6e3Ul8PY8pkpXSCqaysGh10t7C683AS5LA=";
-          npmPackFlags = [ "--ignore-scripts" ];
-          NODE_OPTIONS = "--openssl-legacy-provider";
-          meta = {
-            description = "";
-            homepage = "";
-            # license =
-            # maintainers =
-          };
         };
 
         docker = pkgs.dockerTools.buildLayeredImage {
           name = "ak0_2";
           tag = "latest";
           fromImage = pkgs.dockerTools.pullImage {
-            imageName = "gcr.io/distroless/base-debian12";
-            imageDigest = "sha256:74ddbf52d93fafbdd21b399271b0b4aac1babf8fa98cab59e5692e01169a1348";
-            hash = "sha256-z5xmx1oaxgxYwdEVadlRp1DmokAOounOV1gKG1o4ubI=";
+            imageName = "alpine";
+            imageDigest = "sha256:56fa17d2a7e7f168a043a2712e63aed1f8543aeafdcee47c58dcffe38ed51099";
+            hash = "sha256-C3TOcLa18BKeBfS5FSe0H6BALGA/zXSwSZstK+VaPyo=";
           };
+
+          # fromImage = pkgs.dockerTools.pullImage {
+          #   imageName = "gcr.io/distroless/base-debian12";
+          #   imageDigest = "sha256:74ddbf52d93fafbdd21b399271b0b4aac1babf8fa98cab59e5692e01169a1348";
+          #   hash = "sha256-z5xmx1oaxgxYwdEVadlRp1DmokAOounOV1gKG1o4ubI=";
+          # };
           contents = [
             self.packages.${system}.backend
             self.packages.${system}.frontend
+            pkgs.curl
           ];
           config = {
-            Cmd = [ "/ak0_2"];
+            Cmd = [ "/bin/ak0_2"];
             ExposedPorts = {
-              "8200/tcp" = {};
+              "8200" = {};
             };
           };
         };
@@ -70,7 +69,9 @@
           ];
           shellHook = ''
             if [ ! -d ./web/node_modules ]; then
+              pushd web
               npm install
+              popd
             fi
           '';
         };
