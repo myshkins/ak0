@@ -4,12 +4,12 @@
   inputs = {
     # nixpkgs.url = "nixpkgs/nixos-21.11";
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    utils.url = "github:numtide/flake-utils";
+    flake-utils.url = "github:numtide/flake-utils";
     # flake-utils.url = "github.numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, utils }: 
-    utils.lib.eachDefaultSystem (system:
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
       let
         lastModifiedDate = self.lastModifiedDate or self.lastModified or "19700101";
         version = builtins.substring 0 8 lastModifiedDate;
@@ -21,35 +21,45 @@
         # nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
 
     in {
-      backend = pkgs.buildGoModule {
-        pname = "ak0_2";
-        inherit version;
-        src = ./.;
-        vendorHash = null;
-      };  
+      packages = {
+        backend = pkgs.buildGoModule {
+          pname = "ak0_2";
+          inherit version;
+          src = ./.;
+          vendorHash = null;
+        };
 
-      frontend = pkgs.stdenv.mkDerivation {
-        pname = "ak0_2-frontend";
-        version = "0.0.1";
-        src = ./web;
-        buildInputs = [ pkgs.nodejs ];
-        buildPhases = ''
-          npm install
-          npm run build
-        '';
-        installPhase = ''
-          mkdir -p $out
-          cp -r dist/* $out/
-        '';
-      };
-      
-      docker = {
-        name = "ak0_2";
-        tag = "latest";
-        contents = [
-          self.packages.${system}.backend
-          self.packages.${system}.frontend
-        ];
+        frontend = pkgs.stdenv.mkDerivation {
+          pname = "ak0_2-frontend";
+          version = "0.0.1";
+          src = ./web;
+          buildInputs = [ pkgs.nodejs_23 ];
+          buildPhase = ''
+            npm install --verbose
+            npm run build
+          '';
+          installPhase = ''
+            mkdir -p $out
+            cp -r dist/* $out/
+          '';
+        };
+
+        docker = pkgs.dockerTools.buildLayeredImage {
+          name = "ak0_2";
+          tag = "latest";
+          fromImage = pkgs.dockerTools.pullImage {
+            imageName = "gcr.io/distroless/base-debian12";
+            imageDigest = "sha256:74ddbf52d93fafbdd21b399271b0b4aac1babf8fa98cab59e5692e01169a1348";
+            hash = "sha256-z5xmx1oaxgxYwdEVadlRp1DmokAOounOV1gKG1o4ubI=";
+          };
+          contents = [
+            self.packages.${system}.backend
+            self.packages.${system}.frontend
+          ];
+          config = {
+            Cmd = [ "/ak0_2"];
+          };
+        };
       };
 
       devShell = with pkgs;
