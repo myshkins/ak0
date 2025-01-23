@@ -33,24 +33,27 @@
         docker = pkgs.dockerTools.buildLayeredImage {
           name = "ak0_2";
           tag = "latest";
-          fromImage = pkgs.dockerTools.pullImage {
-            imageName = "alpine";
-            imageDigest = "sha256:56fa17d2a7e7f168a043a2712e63aed1f8543aeafdcee47c58dcffe38ed51099";
-            hash = "sha256-C3TOcLa18BKeBfS5FSe0H6BALGA/zXSwSZstK+VaPyo=";
-          };
-
           # fromImage = pkgs.dockerTools.pullImage {
-          #   imageName = "gcr.io/distroless/base-debian12";
-          #   imageDigest = "sha256:74ddbf52d93fafbdd21b399271b0b4aac1babf8fa98cab59e5692e01169a1348";
-          #   hash = "sha256-z5xmx1oaxgxYwdEVadlRp1DmokAOounOV1gKG1o4ubI=";
+          #   imageName = "alpine";
+          #   imageDigest = "sha256:56fa17d2a7e7f168a043a2712e63aed1f8543aeafdcee47c58dcffe38ed51099";
+          #   hash = "sha256-C3TOcLa18BKeBfS5FSe0H6BALGA/zXSwSZstK+VaPyo=";
           # };
+
+          fromImage = pkgs.dockerTools.pullImage {
+            imageName = "gcr.io/distroless/base-debian12";
+            imageDigest = "sha256:74ddbf52d93fafbdd21b399271b0b4aac1babf8fa98cab59e5692e01169a1348";
+            hash = "sha256-z5xmx1oaxgxYwdEVadlRp1DmokAOounOV1gKG1o4ubI=";
+          };
           contents = [
             self.packages.${system}.backend
             self.packages.${system}.frontend
             pkgs.curl
           ];
           config = {
-            Cmd = [ "/bin/ak0_2"];
+            Cmd = [
+              "/bin/ak0_2"
+              "--env=prod"
+            ];
             ExposedPorts = {
               "8200" = {};
             };

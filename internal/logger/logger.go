@@ -1,11 +1,20 @@
 package logger
 
 import (
-  "log/slog"
-  "os"
+	"log"
+	"log/slog"
+	"os"
 )
 
-var Logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
-
-// todo: implement debug logging, so when in dev info logs go to file, but also log to stdout
-
+func NewLogger() *slog.Logger {
+  out := os.Stdout
+  if os.Getenv("AK0_2_ENV") == "prod" {
+    f, err := os.OpenFile("/ak0_2_log", os.O_RDWR, os.ModeAppend)
+    if err != nil {
+      log.Fatal(err)
+    }
+    out = f
+  }
+  logger := slog.New(slog.NewJSONHandler(out, nil))
+  return logger
+}
