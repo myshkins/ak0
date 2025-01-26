@@ -1,0 +1,3 @@
+{"time":"2025-01-24T00:52:10.454051446Z","level":"INFO","msg":"HandleHome was called"}
+{"time":"2025-01-24T00:52:10.45419562Z","level":"INFO","msg":"fsWrapper was called"}
+{"time":"2025-01-24T00:52:10.4542484Z","level":"INFO","msg":"listening on 0.0.0.0:8200\n"}
