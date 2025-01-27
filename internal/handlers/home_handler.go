@@ -6,9 +6,9 @@ import (
 	"os"
 )
 
-func HandleHome(logger *slog.Logger) http.Handler {
+func HandleHome() http.Handler {
   // do necessary prep work here
-  logger.Info("HandleHome was called")
+  slog.Info("HandleHome was called")
 
   fp := "/home/myshkins/projects/ak0_2/web/dist"
   if os.Getenv("AK0_2_ENV") == "prod" {
@@ -17,7 +17,7 @@ func HandleHome(logger *slog.Logger) http.Handler {
   fs := http.FileServer(http.Dir(fp))
 
   fsWrapper := func() http.Handler {
-    logger.Info("fsWrapper was called")
+    slog.Info("fsWrapper was called")
     return fs
   }
   return fsWrapper()

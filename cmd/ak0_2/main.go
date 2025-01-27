@@ -21,13 +21,12 @@ import (
 
 
 func NewServerHandler(
-  logger *slog.Logger,
   // config *Config
   // commentStore *commentStore
   // anotherStore *anotherStore
 ) http.Handler {
   mux := http.NewServeMux()
-  addRoutes(mux, logger)
+  addRoutes(mux)
 
   var handler http.Handler = mux
   handler = middleware.LoggingMiddleWare(handler)
@@ -39,7 +38,7 @@ func run(ctx context.Context, w io.Writer, slogger *slog.Logger, args []string) 
   ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
   defer cancel()
   
-  srv := NewServerHandler(slogger)
+  srv := NewServerHandler()
   httpServer := &http.Server{
     ReadTimeout: 120 * time.Second,
     WriteTimeout: 120 * time.Second,
