@@ -15,9 +15,7 @@ import (
 	"time"
 
 	"github.com/myshkins/ak0_2/internal/logger"
-	"github.com/myshkins/ak0_2/internal/middleware"
 )
-
 
 
 func NewServerHandler(
@@ -29,8 +27,6 @@ func NewServerHandler(
   addRoutes(mux)
 
   var handler http.Handler = mux
-  handler = middleware.LoggingMiddleWare(handler)
-  // handler = metricsMiddleware(handler)
   return handler
 }
 
@@ -52,6 +48,7 @@ func run(ctx context.Context, w io.Writer, slogger *slog.Logger, args []string) 
     msg := fmt.Sprintf("listening on %v\n", httpServer.Addr)
     slog.Info(msg)
     if err := httpServer.ListenAndServe(); err != nil {
+      fmt.Fprintf(os.Stderr, "error listening and serving: %s\n", err)
       fmt.Fprintf(os.Stderr, "error listening and serving: %s\n", err)
     }
   }()

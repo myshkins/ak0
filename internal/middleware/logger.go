@@ -5,6 +5,8 @@ import (
   "log/slog"
 	"net/http"
 
+  "github.com/myshkins/ak0_2/internal/helpers"
+
   "github.com/felixge/httpsnoop"
 )
 
@@ -23,10 +25,10 @@ func LoggingMiddleWare(h http.Handler) http.Handler {
       slog.Int("status_code", m.Code),
       slog.String("method", r.Method),
       slog.String("uri", r.URL.String()),
-      slog.String("ipaddrg", getIpAddr(r)),
+      slog.String("ipaddr", helpers.GetIpAddr(r)),
       slog.String("referer", r.Header.Get("Referer")),
       slog.String("user_agent", r.Header.Get("User-Agent")),
-      slog.String("ipaddr", getIpAddr(r)),
+      slog.String("ipaddr", helpers.GetIpAddr(r)),
       slog.Int("bytes_written", int(m.Written)),
       slog.Duration("duration", m.Duration),
       )
@@ -34,15 +36,3 @@ func LoggingMiddleWare(h http.Handler) http.Handler {
   return http.HandlerFunc(fn)
 }
 
-func getIpAddr(r *http.Request) string {
-  // default to using custom set header
-  ip := r.Header.Get("AK-First-External-IP")
-  if ip != "" {
-    return ip
-  }
-
-  // if above fails for some reason, use RemnoteAddr
-  // note, that will just be the ip of the nginx reverse proxy
-  ip = r.RemoteAddr
-  return ip
-}

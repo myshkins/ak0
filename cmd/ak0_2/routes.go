@@ -2,7 +2,9 @@ package main
 
 import (
   "net/http"
+
   "github.com/myshkins/ak0_2/internal/handlers"
+	"github.com/myshkins/ak0_2/internal/middleware"
 )
 
 func addRoutes(
@@ -11,5 +13,6 @@ func addRoutes(
   // config Config,
   // authProxy *authProxy
 ) {
-  mux.Handle("/", handlers.HandleHome())
+  mux.Handle("/",
+    middleware.LoggingMiddleWare(handlers.HandleHome()))
 }
