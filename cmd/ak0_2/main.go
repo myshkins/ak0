@@ -15,17 +15,20 @@ import (
 	"time"
 
 	"github.com/myshkins/ak0_2/internal/logger"
+	"github.com/myshkins/ak0_2/internal/middleware"
 )
 
 
 func NewServerHandler(
   // config *Config
   // commentStore *commentStore
-  // anotherStore *anotherStore
+  // BotList
+  clientRateLimiters *middleware.ClientRateLimiters,
 ) http.Handler {
   mux := http.NewServeMux()
-  addRoutes(mux)
+  addRoutes(mux, clientRateLimiters)
 
+  go middleware.CleanupRateLimiters(clientRateLimiters)
   var handler http.Handler = mux
   return handler
 }
@@ -34,7 +37,8 @@ func run(ctx context.Context, w io.Writer, slogger *slog.Logger, args []string) 
   ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
   defer cancel()
   
-  srv := NewServerHandler()
+  crl := middleware.NewClientRateLimiters()
+  srv := NewServerHandler(crl)
   httpServer := &http.Server{
     ReadTimeout: 120 * time.Second,
     WriteTimeout: 120 * time.Second,

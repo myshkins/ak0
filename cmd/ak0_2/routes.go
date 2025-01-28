@@ -9,15 +9,16 @@ import (
 
 func addRoutes(
   mux *http.ServeMux,
-  // some dependencies here, eg.
+  crl *middleware.ClientRateLimiters,
   // config Config,
   // authProxy *authProxy
 ) {
   mux.Handle("/",
-    middleware.FilterBots(
-      middleware.CheckRateLimit(
-        middleware.LoggingMiddleWare(handlers.HandleHome()),
+    middleware.LoggingMiddleWare(
+      middleware.CheckRateLimit(crl,
+        middleware.FilterBots(handlers.HandleHome()),
         ),
       ),
     )
+  // mux.Handle("/ping", handlers.Ping())
 }

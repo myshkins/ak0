@@ -4,50 +4,78 @@ import (
 	"log/slog"
 	"net/http"
 	"sync"
+	"time"
 
 	"github.com/myshkins/ak0_2/internal/helpers"
 
 	"golang.org/x/time/rate"
 )
 
-/*
-get ipaddr, check if it's on block or throttle list
-check user-agent, add to throttle or block list if conditions met
-log bot metrics
-*/
-var clientLimiters = make(map[string]*rate.Limiter) // {"client_ipaddr": limiter}
-var mu sync.Mutex
+type ClientRateLimiter struct {
+	limiter  *rate.Limiter
+	lastSeen time.Time
+}
+type ClientRateLimiters struct {
+	ClientLimiters map[string]*ClientRateLimiter // {"client_ipaddr": ClientRateLimiter}
+	Mu             sync.Mutex
+}
 
-func CheckRateLimit(h http.Handler) http.Handler {
+func NewClientRateLimiters() *ClientRateLimiters {
+	crlMap := make(map[string]*ClientRateLimiter)
+	crl := ClientRateLimiters{
+		ClientLimiters: crlMap,
+		Mu:             sync.Mutex{},
+	}
+	return &crl
+}
+
+func CleanupRateLimiters(crl *ClientRateLimiters) {
+	for {
+		for k, v := range crl.ClientLimiters {
+			if time.Since(v.lastSeen) > time.Minute*3 {
+				delete(crl.ClientLimiters, k)
+			}
+		}
+		time.Sleep(time.Minute * 1)
+	}
+}
+
+func CheckRateLimit(crl *ClientRateLimiters, h http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		ip := helpers.GetIpAddr(r)
-		slog.Info("rate_limit", "ipaddr", ip)
 
-		if !getLimiter(ip).Allow() {
+		if !getLimiter(crl, ip).Allow() {
+			// todo flag it as bot
+
+			slog.LogAttrs(
+				r.Context(),
+				slog.LevelInfo,
+				"rate_limit",
+				slog.String("ipaddr", ip),
+			)
+
 			http.Error(w, "Too many requests", http.StatusTooManyRequests)
 			return
 		}
 
 		h.ServeHTTP(w, r)
-
-		// slog.LogAttrs(
-		// 	r.Context(),
-		// 	slog.LevelInfo,
-		// 	"",
-		// 	slog.String("ipaddr", ip),
-		// )
 	}
 	return http.HandlerFunc(fn)
 }
 
-func getLimiter(ip string) *rate.Limiter {
-	mu.Lock()
-	defer mu.Unlock()
+func getLimiter(crl *ClientRateLimiters, ip string) *rate.Limiter {
+	crl.Mu.Lock()
+	defer crl.Mu.Unlock()
 
-	if limiter, ok := clientLimiters[ip]; ok {
-		return limiter
+	if limiter, ok := crl.ClientLimiters[ip]; ok {
+		limiter.lastSeen = time.Now()
+		return limiter.limiter
 	}
 
-	clientLimiters[ip] = rate.NewLimiter(20, 100)
-	return clientLimiters[ip]
+	r := ClientRateLimiter{
+		limiter:  rate.NewLimiter(20, 100),
+		lastSeen: time.Now(),
+	}
+	crl.ClientLimiters[ip] = &r
+	return r.limiter
 }
