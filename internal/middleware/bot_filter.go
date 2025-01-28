@@ -1,38 +1,26 @@
 package middleware
 
 import (
-	"context"
-  "log/slog"
+	"log/slog"
 	"net/http"
 
-  "github.com/myshkins/ak0_2/internal/helpers"
-
-  "golang.org/x/time/rate"
+	"github.com/myshkins/ak0_2/internal/helpers"
 )
 
-
-/*
-get ipaddr, check if it's on block or throttle list
-check user-agent, add to throttle or block list if conditions met
-log bot metrics
-*/
-var clientLimiters map[string]rate.Limiter
-
 func FilterBots(h http.Handler) http.Handler {
-  fn := func(w http.ResponseWriter, r *http.Request) {
-    ipaddr := helpers.GetIpAddr(r)
-    slog.Info("bot_filter", "ipaddr", ipaddr)
-    user_agent := r.Header.Get("User-Agent")
-    slog.Info("bot_filter", "user_agent", user_agent)
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		ipaddr := helpers.GetIpAddr(r)
+		slog.Info("bot_filter", "ipaddr", ipaddr)
+		user_agent := r.Header.Get("User-Agent")
+		slog.Info("bot_filter", "user_agent", user_agent)
 
-    ctx := context.Background()
-    slog.LogAttrs(
-      ctx,
-      slog.LevelInfo,
-      "",
-      slog.String("ipaddr", ipaddr),
-      )
+		// slog.LogAttrs(
+		// 	r.Context(),
+		// 	slog.LevelInfo,
+		// 	"",
+		// 	slog.String("ipaddr", ipaddr),
+		// )
+    h.ServeHTTP(w, r)
+	}
+	return http.HandlerFunc(fn)
 }
-  return http.HandlerFunc(fn)
-}
-

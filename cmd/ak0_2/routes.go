@@ -14,5 +14,10 @@ func addRoutes(
   // authProxy *authProxy
 ) {
   mux.Handle("/",
-    middleware.LoggingMiddleWare(handlers.HandleHome()))
+    middleware.FilterBots(
+      middleware.CheckRateLimit(
+        middleware.LoggingMiddleWare(handlers.HandleHome()),
+        ),
+      ),
+    )
 }

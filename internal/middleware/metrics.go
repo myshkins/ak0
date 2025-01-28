@@ -3,14 +3,14 @@ package middleware
 import "net/http"
 
 func MetricsMiddleware(h http.Handler) http.Handler {
-  fn := func(w http.ResponseWriter, r *http.Request) {
+	fn := func(w http.ResponseWriter, r *http.Request) {
 
-    // call the original http.Handler we're wrapping
-    h.ServeHTTP(w, r)
+		// call the original http.Handler we're wrapping
+		h.ServeHTTP(w, r)
 
-    // record metrics
+		// record metrics
 
-  }
+	}
 
-  return http.HandlerFunc(fn)
+	return http.HandlerFunc(fn)
 }
