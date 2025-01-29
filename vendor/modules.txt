@@ -1,0 +1,9 @@
+# github.com/felixge/httpsnoop v1.0.4
+## explicit; go 1.13
+github.com/felixge/httpsnoop
+# github.com/x-way/crawlerdetect v0.2.25
+## explicit; go 1.23.0
+github.com/x-way/crawlerdetect
+# golang.org/x/time v0.9.0
+## explicit; go 1.18
+golang.org/x/time/rate
