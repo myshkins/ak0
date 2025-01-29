@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  web:
+    container_name: ak0_2_web
+    image: ak0_2
+    command: ./ak0_2
+    ports:
+      - 8200:8200
+    volumes:
+      - ./dev.log:/ak0_2.log
+    depends_on: 
+      prometheus:
+        condition: service_healthy
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus_ak0_2
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+    networks:
+      - prometheus-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:9090"]
+      interval: 10s
+      timeout: 1s
+      retries: 3
+      start_period: 5s
+
+networks:
+  prometheus-network:
+    driver: bridge

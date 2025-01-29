@@ -9,7 +9,7 @@ import (
 func NewLogger() *slog.Logger {
 	out := os.Stdout
 	if os.Getenv("AK0_2_ENV") == "prod" {
-		f, err := os.OpenFile("/ak0_2_log", os.O_RDWR, os.ModeAppend)
+		f, err := os.OpenFile("/ak0_2.log", os.O_RDWR, os.ModeAppend)
 		if err != nil {
 			log.Fatal(err)
 		}
