@@ -1,34 +1,33 @@
-version: '3'
-
 services:
-  api:
-    container_name: gopetwatch_app
-    build:
-      context: ./services/app
-      dockerfile: Dockerfile.dev
-    env_file: ./.env
-    command: reflex -r '\.go$' -s -- sh -c 'go install && go run gopetwatch'
+  web:
+    container_name: ak0_2_web
+    image: ak0_2
+    command: ./ak0_2
     ports:
-      - 8081:8081
+      - 8200:8200
     volumes:
-      - ./services/app:/usr/local/go/src/gopetwatch
+      - /var/log/ak0_2/ak0_2.log:/ak0_2.log
     depends_on: 
-      mysql:
+      prometheus:
         condition: service_healthy
 
-  mysql:
-    image: mysql
-    container_name: gopetwatch_mysql
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
-    env_file: ./.env
-    healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
-
-  adminer:
-    image: adminer
-    restart: always
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus_ak0_2
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
-      - 8080:8080
+      - 9090:9090
+    networks:
+      - prometheus-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:9090"]
+      interval: 10s
+      timeout: 2s
+      retries: 3
+      start_period: 20s
+
+networks:
+  prometheus-network:
+    driver: bridge

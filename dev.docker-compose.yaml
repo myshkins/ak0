@@ -1,10 +1,7 @@
-version: '3'
-
 services:
   web:
     container_name: ak0_2_web
     image: ak0_2
-    command: ./ak0_2
     ports:
       - 8200:8200
     volumes:
@@ -17,7 +14,7 @@ services:
     image: prom/prometheus
     container_name: prometheus_ak0_2
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yml
     ports:
       - 9090:9090
     networks:
