@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
-  "flag"
+	"errors"
+	"flag"
 	"fmt"
 	"io"
-  "log"
+	"log"
 	"log/slog"
 	"net"
 	"net/http"
@@ -16,6 +17,7 @@ import (
 
 	"github.com/myshkins/ak0_2/internal/logger"
 	"github.com/myshkins/ak0_2/internal/middleware"
+	"github.com/myshkins/ak0_2/internal/metrics"
 )
 
 
@@ -36,6 +38,16 @@ func NewServerHandler(
 func run(ctx context.Context, w io.Writer, slogger *slog.Logger, args []string) error {
   ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
   defer cancel()
+
+  // set up otel
+  otelShutdown, err := metrics.SetupOTelSDK(ctx)
+  if err != nil {
+    return err
+  }
+
+  defer func() {
+    err = errors.Join(err, otelShutdown(context.Background()))
+  }()
   
   crl := middleware.NewClientRateLimiters()
   srv := NewServerHandler(crl)
@@ -52,8 +64,8 @@ func run(ctx context.Context, w io.Writer, slogger *slog.Logger, args []string) 
     msg := fmt.Sprintf("listening on %v\n", httpServer.Addr)
     slog.Info(msg)
     if err := httpServer.ListenAndServe(); err != nil {
-      fmt.Fprintf(os.Stderr, "error listening and serving: %s\n", err)
-      fmt.Fprintf(os.Stderr, "error listening and serving: %s\n", err)
+      msg := fmt.Sprintf("error listening and serving: %s", err)
+      slog.Error(msg)
     }
   }()
 
@@ -66,7 +78,8 @@ func run(ctx context.Context, w io.Writer, slogger *slog.Logger, args []string) 
     shutdownCtx, cancel := context.WithTimeout(shutdownCtx, 10 * time.Second)
     defer cancel()
     if err := httpServer.Shutdown(shutdownCtx); err != nil {
-      fmt.Fprint(os.Stderr, "error shuttind down http server: %s\n", err)
+      msg := fmt.Sprintf("error shutting down http server: %s", err)
+      slog.Error(msg)
     }
   }()
   wg.Wait()
