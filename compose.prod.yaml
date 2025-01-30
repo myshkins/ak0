@@ -1,0 +1,5 @@
+services:
+  ak0_2:
+    volumes:
+      - /var/log/ak0_2/ak0_2.log:/ak0_2.log
+

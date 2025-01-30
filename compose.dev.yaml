@@ -1,0 +1,5 @@
+services:
+  ak0_2:
+    volumes:
+      - ./dev.log:/ak0_2.log
+

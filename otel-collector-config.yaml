@@ -1,0 +1,35 @@
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: localhost:4318
+      grpc:
+        endpoint: localhost:4317
+
+processors:
+  batch:
+      timeout: 10s
+      send_batch_size: 1000
+
+exporters:
+  debug:
+    verbosity: detailed
+
+  otlphttp:
+    endpoint: prometheus:9090
+    tls:
+      insecure: true  # todo: set to false and configure certs
+    headers:
+      # add here eg
+      # Authorization: "Bearer <token>"
+
+extensions:
+  health_check:
+
+service:
+  extensions: [health_check]
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlphttp, debug]

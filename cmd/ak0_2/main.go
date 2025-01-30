@@ -16,8 +16,9 @@ import (
 	"time"
 
 	"github.com/myshkins/ak0_2/internal/logger"
-	"github.com/myshkins/ak0_2/internal/middleware"
 	"github.com/myshkins/ak0_2/internal/metrics"
+	"github.com/myshkins/ak0_2/internal/middleware"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
 
@@ -29,9 +30,10 @@ func NewServerHandler(
 ) http.Handler {
   mux := http.NewServeMux()
   addRoutes(mux, clientRateLimiters)
+  handler := otelhttp.NewHandler(mux, "/")
 
   go middleware.CleanupRateLimiters(clientRateLimiters)
-  var handler http.Handler = mux
+  // var handler http.Handler = mux
   return handler
 }
 
