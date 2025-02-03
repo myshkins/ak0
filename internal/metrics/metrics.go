@@ -71,7 +71,7 @@ func newPropagator() propagation.TextMapPropagator {
 }
 
 func newMeterProvider(r *resource.Resource) (*metric.MeterProvider, error) {
-  metricExporter, err := otlpmetrichttp.New(context.Background(), otlpmetrichttp.WithURLPath("http://otelcol:4318"))
+  metricExporter, err := otlpmetrichttp.New(context.Background(), otlpmetrichttp.WithURLPath(""))
 	if err != nil {
 		return nil, err
 	}

@@ -2,21 +2,21 @@ receivers:
   otlp:
     protocols:
       http:
-        endpoint: localhost:4318
-      grpc:
-        endpoint: localhost:4317
+        endpoint: 0.0.0.0:4318
+      # grpc:
+      #   endpoint: 0.0.0.0:4317
 
 processors:
   batch:
       timeout: 10s
-      send_batch_size: 1000
+      send_batch_size: 100
 
 exporters:
   debug:
     verbosity: detailed
 
   otlphttp:
-    endpoint: prometheus:9090
+    endpoint: http://prometheus:9090/api/v1/otlp
     tls:
       insecure: true  # todo: set to false and configure certs
     headers:
