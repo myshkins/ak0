@@ -3,15 +3,15 @@ package metrics
 import (
 	"context"
 	"errors"
+	"strings"
 	"time"
 
 	"go.opentelemetry.io/otel"
-	// "go.opentelemetry.io/otel/exporters/stdout/stdoutmetric"
 	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/sdk/resource"
-  semconv "go.opentelemetry.io/otel/semconv/v1.26.0"
+	semconv "go.opentelemetry.io/otel/semconv/v1.26.0"
 )
 
 // setupOTelSDK bootstraps the OpenTelemetry pipeline.
@@ -71,16 +71,30 @@ func newPropagator() propagation.TextMapPropagator {
 }
 
 func newMeterProvider(r *resource.Resource) (*metric.MeterProvider, error) {
-  metricExporter, err := otlpmetrichttp.New(context.Background(), otlpmetrichttp.WithURLPath(""))
+  // todo: double check this
+  metricExporter, err := otlpmetrichttp.New(context.Background())
 	if err != nil {
 		return nil, err
 	}
 
+  var view metric.View = func(i metric.Instrument) (metric.Stream, bool) {
+	// In a custom View function, you need to explicitly copy
+	// the name, description, and unit.
+	s := metric.Stream{
+      Name: strings.ReplaceAll(i.Name, ".", "_"),
+      Description: i.Description,
+      Unit: i.Unit,
+    }
+	return s, true
+  }
+
 	meterProvider := metric.NewMeterProvider(
     metric.WithResource(r),
-		metric.WithReader(metric.NewPeriodicReader(metricExporter,
-			// Default is 1m. Set to 3s for demonstrative purposes.
-			metric.WithInterval(3*time.Second))),
+		metric.WithReader(metric.NewPeriodicReader(
+      metricExporter,
+      // todo: should maybe be 1m, change this
+			metric.WithInterval(5*time.Second))),
+    metric.WithView(view),
 	)
 	return meterProvider, nil
 }

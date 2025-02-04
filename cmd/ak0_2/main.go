@@ -18,28 +18,9 @@ import (
 	"github.com/myshkins/ak0_2/internal/logger"
 	"github.com/myshkins/ak0_2/internal/metrics"
 	"github.com/myshkins/ak0_2/internal/middleware"
-  "go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
-
-var meter = otel.Meter("github.com/myshkins/ak0_2")
-
-func testCounter() {
-	apiCounter, err := meter.Int64Counter(
-		"test.counter",
-		metric.WithDescription("Number of API calls."),
-		metric.WithUnit("{call}"),
-	)
-	if err != nil {
-		panic(err)
-	}
-  ctx := context.Background()
-  c := context.WithValue(ctx, "ak02contextest", "hewo")
-  fmt.Println(c.Value("ak02contextest"))
-  apiCounter.Add(c, 1)
-}
 
 func NewServerHandler(
   // config *Config
@@ -57,7 +38,6 @@ func NewServerHandler(
 }
 
 func run(ctx context.Context, w io.Writer, slogger *slog.Logger, args []string) error {
-  testCounter()
   ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
   defer cancel()
 

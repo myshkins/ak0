@@ -60,13 +60,15 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=password
       - GF_USERS_ALLOW_SIGN_UP=false
     volumes:
-      - ./grafana/data:/var/lib/grafana
+      - grafana-data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
     networks:
       - default-network
     depends_on:
       - prometheus
 
+volumes:
+  grafana-data: {}
 
 networks:
   default-network:
