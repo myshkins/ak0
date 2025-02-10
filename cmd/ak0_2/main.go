@@ -27,12 +27,13 @@ func NewServerHandler(
   // commentStore *commentStore
   // BotList
   clientRateLimiters *middleware.ClientRateLimiters,
+  blockList *middleware.BlockList,
 ) http.Handler {
   mux := http.NewServeMux()
-  addRoutes(mux, clientRateLimiters)
+  addRoutes(mux, blockList, clientRateLimiters)
   handler := otelhttp.NewHandler(mux, "/")
 
-  go middleware.CleanupRateLimiters(clientRateLimiters)
+  go middleware.CleanupRateLimiters(clientRateLimiters) // move this to run?
   // var handler http.Handler = mux
   return handler
 }
@@ -52,7 +53,8 @@ func run(ctx context.Context, w io.Writer, slogger *slog.Logger, args []string) 
   }()
   
   crl := middleware.NewClientRateLimiters()
-  srv := NewServerHandler(crl)
+  bl := middleware.NewBlockList()
+  srv := NewServerHandler(crl, bl)
   httpServer := &http.Server{
     ReadTimeout: 120 * time.Second,
     WriteTimeout: 120 * time.Second,

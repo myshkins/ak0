@@ -9,6 +9,7 @@ import (
 
 func addRoutes(
   mux *http.ServeMux,
+  bl  *middleware.BlockList,
   crl *middleware.ClientRateLimiters,
   // config Config,
   // authProxy *authProxy
@@ -16,7 +17,7 @@ func addRoutes(
   mux.Handle("/",
     middleware.LoggingMiddleWare(
       middleware.CheckRateLimit(crl,
-        middleware.FilterBots(handlers.HandleHome()),
+        middleware.FilterBots(bl, handlers.HandleHome()),
         ),
       ),
     )
