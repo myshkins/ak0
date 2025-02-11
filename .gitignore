@@ -6,3 +6,5 @@ ak0_2
 !ak0_2/
 result
 dev.log
+.env
+.env.dev
