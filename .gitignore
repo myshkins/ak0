@@ -8,3 +8,5 @@ result
 dev.log
 .env
 .env.dev
+otel/certs/*
+
