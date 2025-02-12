@@ -1,7 +1,6 @@
 package handlers
 
 import (
-  "fmt"
   "context"
 	"log/slog"
 	"net/http"
@@ -28,7 +27,6 @@ func HandleHome() http.Handler {
 	}
   ctx := context.Background()
   c := context.WithValue(ctx, "ak02contextest", "hewo")
-  fmt.Println(c.Value("ak02contextest"))
 
   fp := "/home/myshkins/projects/ak0_2/web/dist"
 	if os.Getenv("AK0_2_ENV") == "prod" {

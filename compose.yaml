@@ -2,6 +2,7 @@ services:
   ak0_2:
     container_name: ak0_2_web
     image: ak0_2
+    user: 1000:1000
     restart: unless-stopped
     ports:
       - 8200:8200
@@ -16,7 +17,7 @@ services:
 
   otelcol:
     container_name: otelcol
-    image: otel/opentelemetry-collector-contrib
+    image: otel/opentelemetry-collector-contrib:0.119.0
     restart: unless-stopped
     volumes:
       - ./otel/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
@@ -35,7 +36,7 @@ services:
       - default-network
   
   prometheus:
-    image: prom/prometheus
+    image: prom/prometheus:v3.1.0
     container_name: prometheus_ak0_2
     command: --config.file=/etc/prometheus/prometheus.yml --web.enable-otlp-receiver
     restart: unless-stopped
@@ -53,7 +54,7 @@ services:
       start_period: 20s
 
   grafana:
-    image: grafana/grafana-oss
+    image: grafana/grafana-oss:11.5.1
     container_name: grafana
     restart: unless-stopped
     ports:
