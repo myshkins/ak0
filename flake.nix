@@ -30,7 +30,7 @@
           npmDepsHash = "sha256-InkMefNQA6e3Ul8PY8pkpXSCqaysGh10t7C683AS5LA=";
         };
 
-        docker = pkgs.dockerTools.buildLayeredImage {
+        docker = pkgs.dockerTools.streamLayeredImage {
           name = "ak0_2";
           tag = "latest";
           # fromImage = pkgs.dockerTools.pullImage {

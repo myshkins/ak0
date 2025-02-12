@@ -33,7 +33,6 @@ func NewLogger() (*slog.Logger, *os.File) {
 		}
 
 	}
-  fmt.Printf("\n logfile is: %v", out.Name())
 	logger := slog.New(slog.NewJSONHandler(out, nil))
   slog.SetDefault(logger)
 	return logger, out

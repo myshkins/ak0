@@ -20,7 +20,7 @@ services:
     image: otel/opentelemetry-collector-contrib:0.119.0
     restart: unless-stopped
     volumes:
-      - ./otel/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
+      - ./configs/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
       - ./otel/certs/ak02_ca.crt:/etc/ssl/certs/ak02_ca.crt
       - ./otel/certs/ak02_otel.crt:/etc/ssl/certs/ak02_otel.crt
       - ./otel/certs/private/ak02_otel.key:/etc/ssl/certs/private/ak02_otel.key
@@ -41,7 +41,7 @@ services:
     command: --config.file=/etc/prometheus/prometheus.yml --web.enable-otlp-receiver
     restart: unless-stopped
     volumes:
-      - ./prometheus.yaml:/etc/prometheus/prometheus.yml
+      - ./configs/prometheus.yaml:/etc/prometheus/prometheus.yml
     ports:
       - 9090:9090
     networks:

@@ -1,5 +1,6 @@
 **/node_modules/
 **/dist/
+build/*
 .env
 .env.dev
 ak0_2
@@ -9,3 +10,4 @@ examples.nix
 otel/certs/*
 result
 web/vite.config.js.timestamp-*
+
