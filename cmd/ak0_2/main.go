@@ -13,6 +13,7 @@ import (
 	"os"
 	"os/signal"
 	"sync"
+  "syscall"
 	"time"
 
 	"github.com/myshkins/ak0_2/internal/logger"
@@ -39,7 +40,7 @@ func NewServerHandler(
 }
 
 func run(ctx context.Context, w io.Writer, slogger *slog.Logger, args []string) error {
-  ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
+  ctx, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
   defer cancel()
 
   // set up otel
@@ -101,8 +102,8 @@ func main() {
     log.Fatal(err)
   }
 
-  slogger := logger.NewLogger()
-  slog.SetDefault(slogger)
+  slogger, logfile := logger.NewLogger()
+  go logger.ListenForLogrotate(logfile)
 
   ctx := context.Background()
   if err := run(ctx, os.Stdout, slogger, os.Args); err != nil {

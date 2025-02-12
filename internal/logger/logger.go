@@ -1,20 +1,58 @@
 package logger
 
 import (
-	"log"
+	"fmt"
 	"log/slog"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
-func NewLogger() *slog.Logger {
+const (
+	logPath  = "/ak0_2.log"
+	logMode  = os.O_APPEND | os.O_CREATE | os.O_WRONLY
+	logPerms = 0644
+)
+
+func NewLogger() (*slog.Logger, *os.File) {
 	out := os.Stdout
 	if os.Getenv("AK0_2_ENV") == "prod" {
-		f, err := os.OpenFile("/ak0_2.log", os.O_RDWR, os.ModeAppend)
-		if err != nil {
-			log.Fatal(err)
+		// add retry logic in case of logratate race condition
+		for i := 0; i < 5; i++ {
+			time.Sleep(100 * time.Millisecond)
+			f, err := os.OpenFile(logPath, logMode, logPerms)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "\n %v - failed to open new log file after logrotate", time.Now())
+				continue
+			}
+			out = f
+			break
 		}
-		out = f
+
 	}
 	logger := slog.New(slog.NewJSONHandler(out, nil))
-	return logger
+	return logger, out
+}
+
+func ListenForLogrotate(oldfile *os.File) {
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGUSR1)
+
+	go func() {
+		slog.Info("logger listening for USR1 signal...")
+		for sig := range sigChan {
+			switch sig {
+			case syscall.SIGUSR1:
+				fmt.Println("logger sigChan received USR1, rotating logs")
+				l, f := NewLogger()
+				slog.SetDefault(l)
+				oldfile.Close()
+				oldfile = f
+			case syscall.SIGTERM:
+				fmt.Println("logger sigChan received sigterm, shutting down")
+				return
+			}
+		}
+	}()
 }
