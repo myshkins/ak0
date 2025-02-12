@@ -12,7 +12,7 @@ import (
 const (
 	logPath  = "/ak0_2.log"
 	logMode  = os.O_APPEND | os.O_CREATE | os.O_WRONLY
-	logPerms = 0644
+	logPerms = 0640
 )
 
 func NewLogger() (*slog.Logger, *os.File) {
