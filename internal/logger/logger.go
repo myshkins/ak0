@@ -16,7 +16,9 @@ const (
 )
 
 func NewLogger() (*slog.Logger, *os.File) {
-	out := os.Stdout
+	// out := os.Stdout
+  out, err := os.OpenFile("/home/myshkins/projects/ak0_2/dev.log", logMode, logPerms)
+  if err != nil {fmt.Println(err)}
 	if os.Getenv("AK0_2_ENV") == "prod" {
 		// add retry logic in case of logratate race condition
 		for i := 0; i < 5; i++ {
@@ -31,7 +33,9 @@ func NewLogger() (*slog.Logger, *os.File) {
 		}
 
 	}
+  fmt.Printf("\n logfile is: %v", out.Name())
 	logger := slog.New(slog.NewJSONHandler(out, nil))
+  slog.SetDefault(logger)
 	return logger, out
 }
 
