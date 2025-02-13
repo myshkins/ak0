@@ -44,7 +44,7 @@ func SetupOTelSDK(ctx context.Context) (shutdown func(context.Context) error, er
     resource.Default(),
     resource.NewWithAttributes(
       semconv.SchemaURL,
-      semconv.ServiceName("ak0_2"),
+      semconv.ServiceName("ak0"),
       ),
     )
   if err != nil {

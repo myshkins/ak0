@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/myshkins/ak0_2/internal/helpers"
+	"github.com/myshkins/ak0/internal/helpers"
 
 	"github.com/x-way/crawlerdetect"
 	"go.opentelemetry.io/otel"
@@ -26,7 +26,7 @@ type BlockList struct {
 	Mu                  sync.Mutex
 }
 
-var meter = otel.Meter("github.com/myshkins/ak0_2")
+var meter = otel.Meter("github.com/myshkins/ak0")
 
 func NewBlockList() *BlockList {
 	blockedMap := make(map[string]*BlockedRateLimiter)

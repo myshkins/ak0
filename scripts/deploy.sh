@@ -10,7 +10,10 @@ cd $script_path
 #   exit 1
 # fi
 
+# run the build image script that was created above
 pushd .. >/dev/null
 echo $(whoami)
-./result > ./build/backend/ak0_2_image
+./result | ./build/backend/ak0_image
+
+scp ../build/backend/ak0_image pgum:/home/iceking/data/ak0/images/
 

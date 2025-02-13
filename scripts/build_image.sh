@@ -3,10 +3,10 @@ script=$(readlink -f "$0")
 script_path=$(dirname "$script")
 cd $script_path
 
-image_name="ak0_2"
+image_name="ak0"
 
 
-# build ak0_2 image locally
+# build ak0 image locally
 if docker ps -aq | grep "${image_name}" >/dev/null 2>&1; then
   echo "There are some existing containers. Prob wanna remove em first"
   exit 1

@@ -1,5 +1,5 @@
 {
-  description = "ak0_2 go backend flake";
+  description = "ak0 go backend flake";
 
   inputs = {
     # nixpkgs.url = "nixpkgs/nixos-21.11";
@@ -17,21 +17,21 @@
     in {
       packages = {
         backend = pkgs.buildGoModule {
-          pname = "ak0_2";
+          pname = "ak0";
           inherit version;
           src = ./.;
           vendorHash = null;
         };
 
         frontend = pkgs.buildNpmPackage {
-          pname = "ak0_2-frontend";
+          pname = "ak0-frontend";
           version = "0.0.1";
           src = ./web;
           npmDepsHash = "sha256-InkMefNQA6e3Ul8PY8pkpXSCqaysGh10t7C683AS5LA=";
         };
 
         docker = pkgs.dockerTools.streamLayeredImage {
-          name = "ak0_2";
+          name = "ak0";
           tag = "latest";
           # fromImage = pkgs.dockerTools.pullImage {
           #   imageName = "alpine";
@@ -51,7 +51,7 @@
           ];
           config = {
             Cmd = [
-              "/bin/ak0_2"
+              "/bin/ak0"
               "--env=prod"
             ];
             ExposedPorts = {

@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/myshkins/ak0_2/internal/helpers"
+	"github.com/myshkins/ak0/internal/helpers"
 
 	"golang.org/x/time/rate"
 )

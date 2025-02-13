@@ -3,8 +3,8 @@
 build/*
 .env
 .env.dev
-ak0_2
-!ak0_2/
+cmd/ak0/ak0
+!ak0/
 dev.log
 examples.nix
 otel/certs/*

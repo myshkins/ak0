@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/myshkins/ak0_2/internal/helpers"
+	"github.com/myshkins/ak0/internal/helpers"
 
 	"github.com/felixge/httpsnoop"
 )

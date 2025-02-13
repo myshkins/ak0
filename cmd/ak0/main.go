@@ -15,9 +15,9 @@ import (
   "syscall"
 	"time"
 
-	"github.com/myshkins/ak0_2/internal/logger"
-	"github.com/myshkins/ak0_2/internal/metrics"
-	"github.com/myshkins/ak0_2/internal/middleware"
+	"github.com/myshkins/ak0/internal/logger"
+	"github.com/myshkins/ak0/internal/metrics"
+	"github.com/myshkins/ak0/internal/middleware"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
@@ -89,7 +89,7 @@ func main() {
   env := flag.String("env", "dev", "value to signal the type of environment to run in")
   flag.Parse()
 
-  err := os.Setenv("AK0_2_ENV", *env)
+  err := os.Setenv("AK0_ENV", *env)
   if err != nil {
     log.Fatal(err)
   }

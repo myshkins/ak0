@@ -1,4 +1,4 @@
-module github.com/myshkins/ak0_2
+module github.com/myshkins/ak0
 
 go 1.23.0
 

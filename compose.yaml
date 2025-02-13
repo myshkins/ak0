@@ -1,14 +1,14 @@
 services:
-  ak0_2:
-    container_name: ak0_2_web
-    image: ak0_2
+  ak0:
+    container_name: ak0_web
+    image: ak0
     user: 1000:1000
     restart: unless-stopped
     ports:
       - 8200:8200
     environment:
       - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://otelcol:4318/v1/metrics
-      - OTEL_RESOURCE_ATTRIBUTES="service.name=ak0_2,service.version=0.0.1"
+      - OTEL_RESOURCE_ATTRIBUTES="service.name=ak0,service.version=0.0.1"
     depends_on: 
       prometheus:
         condition: service_healthy
@@ -37,7 +37,7 @@ services:
   
   prometheus:
     image: prom/prometheus:v3.1.0
-    container_name: prometheus_ak0_2
+    container_name: prometheus_ak0
     command: --config.file=/etc/prometheus/prometheus.yml --web.enable-otlp-receiver
     restart: unless-stopped
     volumes:

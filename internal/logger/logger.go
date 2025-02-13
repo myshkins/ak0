@@ -10,16 +10,16 @@ import (
 )
 
 const (
-	logPath  = "/ak0_2.log"
+	logPath  = "/ak0.log"
 	logMode  = os.O_APPEND | os.O_CREATE | os.O_WRONLY
 	logPerms = 0640
 )
 
 func NewLogger() (*slog.Logger, *os.File) {
 	// out := os.Stdout
-  out, err := os.OpenFile("/home/myshkins/projects/ak0_2/dev.log", logMode, logPerms)
+  out, err := os.OpenFile("/home/myshkins/projects/ak0/dev.log", logMode, logPerms)
   if err != nil {fmt.Println(err)}
-	if os.Getenv("AK0_2_ENV") == "prod" {
+	if os.Getenv("AK0_ENV") == "prod" {
 		// add retry logic in case of logratate race condition
 		for i := 0; i < 5; i++ {
 			time.Sleep(100 * time.Millisecond)

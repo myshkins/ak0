@@ -1,0 +1,16 @@
+# this should live on server at /etc/logrotate/ak0
+
+/var/log/ak0/ak0.log {
+    daily
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0640 iceking iceking
+    olddir /var/log/ak0/old_logs
+    su iceking iceking
+    postrotate
+        docker kill --signal=USR1 ak0_web
+    endscript
+}

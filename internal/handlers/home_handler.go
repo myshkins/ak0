@@ -10,7 +10,7 @@ import (
 	"go.opentelemetry.io/otel/metric"
 )
 
-var meter = otel.Meter("github.com/myshkins/ak0_2")
+var meter = otel.Meter("github.com/myshkins/ak0")
 
 
 func HandleHome() http.Handler {
@@ -28,8 +28,8 @@ func HandleHome() http.Handler {
   ctx := context.Background()
   c := context.WithValue(ctx, "ak02contextest", "hewo")
 
-  fp := "/home/myshkins/projects/ak0_2/web/dist"
-	if os.Getenv("AK0_2_ENV") == "prod" {
+  fp := "/home/myshkins/projects/ak0/web/dist"
+	if os.Getenv("AK0_ENV") == "prod" {
 		fp = "/lib/node_modules/ak02/dist"
 	}
 	fs := http.FileServer(http.Dir(fp))
