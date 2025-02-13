@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 script=$(readlink -f "$0")
 script_path=$(dirname "$script")
 echo $script_path
