@@ -17,7 +17,7 @@ const (
 
 func NewLogger() (*slog.Logger, *os.File) {
 	// out := os.Stdout
-  out, err := os.OpenFile("/home/myshkins/projects/ak0/dev.log", logMode, logPerms)
+  out, err := os.OpenFile(logPath, logMode, logPerms)
   if err != nil {fmt.Println(err)}
 	if os.Getenv("AK0_ENV") == "prod" {
 		// add retry logic in case of logratate race condition

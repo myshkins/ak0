@@ -12,8 +12,17 @@ cd $script_path
 
 # run the build image script that was created above
 pushd .. >/dev/null
-echo $(whoami)
-./result | ./build/backend/ak0_image
+./result > ./build/backend/ak0_image
 
-scp ../build/backend/ak0_image pgum:/home/iceking/data/ak0/images/
+scp ./build/backend/ak0_image pgum:/home/iceking/data/ak0/images/
+scp -r ./otel pgum:/home/iceking/.local/ak0/otel
 
+ssh pgum << 'EOF'
+  cd /home/iceking/apps/ak0
+  docker compose -f compose.yaml -f compose.prod.yaml down
+  docker image rm ak0:latest
+  docker image load /home/iceking/data/ak0/images/ak0
+  git pull
+  ./scripts/export.sh
+  docker compose up
+EOF
