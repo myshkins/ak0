@@ -36,7 +36,7 @@ if [[ $? -ne 0 ]]; then
   exit 1
 fi
 
-docker load < ./result
+./result | docker image load
 
 popd >/dev/null
 
