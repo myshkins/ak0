@@ -64,6 +64,7 @@
       devShell = with pkgs;
         mkShell {
           buildInputs = with pkgs; [
+            bash
             go
             gopls
             nodejs_22

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 script=$(readlink -f "$0")
 script_path=$(dirname "$script")
 cd $script_path
