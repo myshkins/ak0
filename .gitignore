@@ -2,12 +2,11 @@
 **/dist/
 build/*
 .env
-.env.dev
 cmd/ak0/ak0
 !ak0/
 dev.log
 examples.nix
-otel/certs/*
+configs/certs/*
 result
 web/vite.config.js.timestamp-*
 

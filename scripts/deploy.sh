@@ -15,7 +15,7 @@ pushd .. >/dev/null
 ./result > ./build/backend/ak0_image
 
 scp ./build/backend/ak0_image pgum:/home/iceking/data/ak0/images/
-scp -r ./otel pgum:/home/iceking/.local/ak0/otel
+scp -r ./configs pgum:/home/iceking/.local/ak0/configs
 
 ssh pgum << 'EOF'
   cd /home/iceking/apps/ak0

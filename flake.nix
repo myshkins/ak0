@@ -13,6 +13,9 @@
         lastModifiedDate = self.lastModifiedDate or self.lastModified or "19700101";
         version = builtins.substring 0 8 lastModifiedDate;
         pkgs = import nixpkgs { inherit system; };
+        pythonEnv = pkgs.python3.withPackages (ps: with ps; [
+          bcrypt
+        ]);
 
     in {
       packages = {
@@ -69,6 +72,7 @@
             gopls
             nodejs_22
             nil
+            pythonEnv
             reflex
           ];
           shellHook = ''
