@@ -9,9 +9,8 @@ services:
     environment:
       - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://otelcol:4318/v1/metrics
       - OTEL_RESOURCE_ATTRIBUTES="service.name=ak0,service.version=0.0.1"
-    depends_on: 
-      prometheus:
-        condition: service_healthy
+    depends_on:
+      - prometheus
     networks:
       - default-network
 
@@ -21,9 +20,9 @@ services:
     restart: unless-stopped
     volumes:
       - ./configs/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
-      - ./otel/certs/ak02_ca.crt:/etc/ssl/certs/ak02_ca.crt
-      - ./otel/certs/ak02_otel.crt:/etc/ssl/certs/ak02_otel.crt
-      - ./otel/certs/private/ak02_otel.key:/etc/ssl/certs/private/ak02_otel.key
+      - ./configs/certs/otel.crt:/etc/ssl/certs/otel.crt
+      - ./configs/certs/ak0_ca.crt:/etc/ssl/certs/ak0_ca.crt
+      - ./configs/certs/private/otel.key:/etc/ssl/certs/private/otel.key
     ports:
       - 1888:1888 # pprof extension
       - 8888:8888 # Prometheus metrics exposed by the Collector
@@ -38,20 +37,24 @@ services:
   prometheus:
     image: prom/prometheus:v3.1.0
     container_name: prometheus_ak0
-    command: --config.file=/etc/prometheus/prometheus.yml --web.enable-otlp-receiver
+    command: --config.file=/etc/prometheus/prometheus.yml --web.config.file=/etc/prometheus/prometheus_web_config.yaml --web.enable-otlp-receiver
     restart: unless-stopped
     volumes:
       - ./configs/prometheus.yaml:/etc/prometheus/prometheus.yml
+      - ./configs/prometheus_web_config.yaml:/etc/prometheus/prometheus_web_config.yaml
+      - ./configs/certs/ak0_ca.crt:/etc/ssl/certs/ak0_ca.crt
+      - ./configs/certs/prometheus.crt:/etc/ssl/certs/prometheus.crt
+      - ./configs/certs/private/prometheus.key:/etc/ssl/certs/private/prometheus.key
     ports:
       - 9090:9090
     networks:
       - default-network
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:9090"]
-      interval: 10s
-      timeout: 2s
-      retries: 3
-      start_period: 20s
+    # healthcheck:
+    #   test: ["CMD", "wget", "--spider", "http://localhost:9090"]
+    #   interval: 10s
+    #   timeout: 2s
+    #   retries: 3
+    #   start_period: 20s
 
   grafana:
     image: grafana/grafana-oss:11.5.1
