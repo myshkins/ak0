@@ -1,95 +1,95 @@
-# create ca key
+#!/usr/bin/env bash
+script=$(readlink -f "$0")
+script_path=$(dirname "$script")
+cd $script_path
+
+
+set -e
+
+org_name="ak0"
+
+rm -rf certs
+mkdir -p certs/private
+
+# create ca key and cert
 openssl genrsa -out certs/private/ak0_ca.key 4096
+openssl req -x509 -new -nodes -key certs/private/ak0_ca.key -sha256 \
+  -days 36500 -out certs/ak0_ca.crt -subj "/C=US/O=${org_name}/CN=AK0-CA"
 
-# create ca cert
-openssl req -x509 -new -nodes \
-  -key certs/private/ak0_ca.key \
-  -sha256 -days 36500 \
-  -out certs/ak0_ca.crt \
-  -subj "/C=US/ST=State/L=City/O=Organization/OU=Unit/CN=AK0-CA"
-
-# prometheus certs
-# Create prometheus private key
-openssl genrsa -out certs/private/prometheus.key 2048
-
-# Create CSR config
-cat << EOF > certs/prometheus-csr.conf
+# create config file for prometheus certs
+cat > certs/prometheus.cnf <<EOF
 [req]
-req_extensions = v3_req
-distinguished_name = req_distinguished_name
+default_bits = 4096
 prompt = no
+default_md = sha256
+req_extensions = req_ext
+distinguished_name = dn
 
-[req_distinguished_name]
+[dn]
 C = US
-ST = State
-L = City
-O = Organization
-OU = Unit
+O = ${org_name}
 CN = prometheus
 
-[v3_req]
-basicConstraints = CA:FALSE
-keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+[req_ext]
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1 = prometheus
-DNS.2 = localhost
+DNS.1 = localhost
+DNS.2 = prometheus
+DNS.3 = prometheus.local
 IP.1 = 127.0.0.1
+
 EOF
 
-# Generate CSR
-openssl req -new -key certs/private/prometheus.key \
-  -out certs/prometheus.csr \
-  -config certs/prometheus-csr.conf
-
-# Sign the certificate
-openssl x509 -req -in certs/prometheus.csr \
-  -CA certs/ak0_ca.crt -CAkey certs/private/ak0_ca.key \
-  -CAcreateserial -out certs/prometheus.crt \
-  -days 36500 -sha256 \
-  -extensions v3_req \
-  -extfile certs/prometheus-csr.conf
-
-## otel certs
-# Create otel private key
-openssl genrsa -out certs/private/otel.key 2048
-
-# Create CSR config
-cat << EOF > certs/otel-csr.conf
+# create config file for OpenTelemetry certs
+cat > certs/otel.cnf <<EOF
 [req]
-req_extensions = v3_req
-distinguished_name = req_distinguished_name
+default_bits = 4096
 prompt = no
+default_md = sha256
+req_extensions = req_ext
+distinguished_name = dn
 
-[req_distinguished_name]
+[dn]
 C = US
-ST = State
-L = City
-O = Organization
-OU = Unit
+O = ${org_name}
 CN = otelcol
 
-[v3_req]
-basicConstraints = CA:FALSE
-keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+[req_ext]
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1 = otelcol
-DNS.2 = localhost
+DNS.1 = localhost
+DNS.2 = otelcol
+DNS.3 = otelcol.local
 IP.1 = 127.0.0.1
 EOF
 
-# Generate CSR
-openssl req -new -key certs/private/otel.key \
-  -out certs/otel.csr \
-  -config certs/otel-csr.conf
 
-# Sign the certificate
-openssl x509 -req -in certs/otel.csr \
-  -CA certs/ak0_ca.crt -CAkey certs/private/ak0_ca.key \
-  -CAcreateserial -out certs/otel.crt \
-  -days 36500 -sha256 \
-  -extensions v3_req \
-  -extfile certs/otel-csr.conf
+# Create prometheus private key, generate csr, sign cert
+openssl genrsa -out certs/private/prometheus.key 4096
+echo "generating prom csr"
+openssl req -new -key certs/private/prometheus.key -out certs/prometheus.csr \
+  -config certs/prometheus.cnf
+openssl x509 -req -in certs/prometheus.csr -CA certs/ak0_ca.crt -CAkey certs/private/ak0_ca.key \
+  -CAcreateserial -out certs/prometheus.crt -days 36500 -sha256 -extensions req_ext \
+  -extfile certs/prometheus.cnf
+
+
+# Create otel private key, generate csr, sign cert
+openssl genrsa -out certs/private/otel.key 4096
+openssl req -new -key certs/private/otel.key -out certs/otel.csr \
+  -config certs/otel.cnf
+openssl x509 -req -in certs/otel.csr -CA certs/ak0_ca.crt -CAkey certs/private/ak0_ca.key \
+  -CAcreateserial -out certs/otel.crt -days 36500 -sha256 -extensions req_ext \
+  -extfile certs/otel.cnf
+
+# Set proper permissions
+chmod 600 certs/private/ak0_ca.key
+chmod 644 certs/private/prometheus.key
+chmod 644 certs/private/otel.key
+chmod 644 certs/ak0_ca.crt
+chmod 644 certs/prometheus.crt
+chmod 644 certs/otel.crt
+
+echo "certificate generation complete"
