@@ -5,6 +5,8 @@ cd $script_path
 
 
 set -e
+echo ""
+echo "running create_certs.sh"
 
 org_name="ak0"
 
@@ -93,3 +95,4 @@ chmod 644 certs/prometheus.crt
 chmod 644 certs/otel.crt
 
 echo "certificate generation complete"
+echo ""

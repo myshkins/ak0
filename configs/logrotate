@@ -1,4 +1,4 @@
-# this should live on server at /etc/logrotate/ak0
+# this should live on server at /etc/logrotate.d/ak0
 
 /var/log/ak0/ak0.log {
     daily

@@ -16,9 +16,7 @@ const (
 )
 
 func NewLogger() (*slog.Logger, *os.File) {
-	// out := os.Stdout
-  out, err := os.OpenFile(logPath, logMode, logPerms)
-  if err != nil {fmt.Println(err)}
+	out := os.Stdout
 	if os.Getenv("AK0_ENV") == "prod" {
 		// add retry logic in case of logratate race condition
 		for i := 0; i < 5; i++ {

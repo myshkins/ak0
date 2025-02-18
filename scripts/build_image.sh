@@ -3,8 +3,10 @@ script=$(readlink -f "$0")
 script_path=$(dirname "$script")
 cd $script_path
 
-image_name="ak0"
 
+echo ""
+echo "running build_image.sh"
+image_name="ak0"
 
 # build ak0 image locally
 if docker ps -aq | grep "${image_name}" >/dev/null 2>&1; then
@@ -40,3 +42,5 @@ fi
 
 popd >/dev/null
 
+echo "build_image.sh complete"
+echo ""

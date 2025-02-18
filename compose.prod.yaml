@@ -1,5 +1,6 @@
 services:
   ak0:
+    command: ak0 --env=prod
     volumes:
       - /var/log/ak0/ak0.log:/ak0.log
 
