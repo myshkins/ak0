@@ -12,5 +12,6 @@ cp -r \
   compose.prod.yaml \
   configs \
   grafana \
+  configs/certs \
   /home/iceking/.local/ak0/
 
