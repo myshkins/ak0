@@ -54,17 +54,12 @@ services:
       - 9090:9090
     networks:
       - default-network
-    # healthcheck:
-    #   test: ["CMD", "wget", "--spider", "http://localhost:9090"]
-    #   interval: 10s
-    #   timeout: 2s
-    #   retries: 3
-    #   start_period: 20s
 
   grafana:
     container_name: grafana
     image: grafana/grafana-oss:11.5.1
     profiles: ["full"]
+    user: 472:472
     restart: unless-stopped
     ports:
       - 3000:3000
