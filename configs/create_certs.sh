@@ -5,10 +5,26 @@ cd $script_path
 
 
 set -e
+
 echo ""
 echo "running create_certs.sh"
 
 org_name="ak0"
+req_config=$(cat <<'END_REQ'
+[req]
+default_bits = 4096
+prompt = no
+default_md = sha256
+req_extensions = req_ext
+distinguished_name = dn
+
+[req_ext]
+subjectAltName = @alt_names
+
+[dn]
+C = US
+END_REQ
+)
 
 rm -rf certs
 mkdir -p certs/private
@@ -20,45 +36,22 @@ openssl req -x509 -new -nodes -key certs/private/ak0_ca.key -sha256 \
 
 # create config file for prometheus certs
 cat > certs/prometheus.cnf <<EOF
-[req]
-default_bits = 4096
-prompt = no
-default_md = sha256
-req_extensions = req_ext
-distinguished_name = dn
-
-[dn]
-C = US
+$req_config
 O = ${org_name}
 CN = prometheus
-
-[req_ext]
-subjectAltName = @alt_names
 
 [alt_names]
 DNS.1 = localhost
 DNS.2 = prometheus
 DNS.3 = prometheus.local
 IP.1 = 127.0.0.1
-
 EOF
 
 # create config file for OpenTelemetry certs
 cat > certs/otel.cnf <<EOF
-[req]
-default_bits = 4096
-prompt = no
-default_md = sha256
-req_extensions = req_ext
-distinguished_name = dn
-
-[dn]
-C = US
+$req_config
 O = ${org_name}
 CN = otelcol
-
-[req_ext]
-subjectAltName = @alt_names
 
 [alt_names]
 DNS.1 = localhost
@@ -67,10 +60,22 @@ DNS.3 = otelcol.local
 IP.1 = 127.0.0.1
 EOF
 
+# create config file for grafana certs
+cat > certs/grafana.cnf <<EOF
+$req_config
+O = ${org_name}
+CN = grafana
+
+[alt_names]
+DNS.1 = localhost
+DNS.2 = grafana
+DNS.3 = grafana.local
+IP.1 = 127.0.0.1
+EOF
 
 # Create prometheus private key, generate csr, sign cert
 openssl genrsa -out certs/private/prometheus.key 4096
-echo "generating prom csr"
+echo "generating prometheus csr"
 openssl req -new -key certs/private/prometheus.key -out certs/prometheus.csr \
   -config certs/prometheus.cnf
 openssl x509 -req -in certs/prometheus.csr -CA certs/ak0_ca.crt -CAkey certs/private/ak0_ca.key \
@@ -86,13 +91,30 @@ openssl x509 -req -in certs/otel.csr -CA certs/ak0_ca.crt -CAkey certs/private/a
   -CAcreateserial -out certs/otel.crt -days 36500 -sha256 -extensions req_ext \
   -extfile certs/otel.cnf
 
+# Create grafana private key, generate csr, sign cert
+openssl genrsa -out certs/private/grafana.key 4096
+openssl req -new -key certs/private/grafana.key -out certs/grafana.csr \
+  -config certs/grafana.cnf
+openssl x509 -req -in certs/grafana.csr -CA certs/ak0_ca.crt -CAkey certs/private/ak0_ca.key \
+  -CAcreateserial -out certs/grafana.crt -days 36500 -sha256 -extensions req_ext \
+  -extfile certs/grafana.cnf
+
 # Set proper permissions
 chmod 600 certs/private/ak0_ca.key
-chmod 644 certs/private/prometheus.key
-chmod 644 certs/private/otel.key
+chmod 600 certs/private/prometheus.key
+chmod 600 certs/private/otel.key
+chmod 600 certs/private/grafana.key
 chmod 644 certs/ak0_ca.crt
 chmod 644 certs/prometheus.crt
 chmod 644 certs/otel.crt
+chmod 644 certs/grafana.crt
 
-echo "certificate generation complete"
+chown 10001:10001 certs/private/otel.key
+chown 10001:10001 certs/otel.crt
+chown nobody:nobody certs/private/prometheus.key
+chown nobody:nobody certs/prometheus.crt
+chown 472:472 certs/private/grafana.key
+chown 472:472 certs/grafana.crt
+
 echo ""
+echo "yay, certificate generation complete"

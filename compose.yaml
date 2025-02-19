@@ -19,6 +19,7 @@ services:
     container_name: otelcol
     image: otel/opentelemetry-collector-contrib:0.119.0
     profiles: ["no-grafana", "full"]
+    user: 10001:10001
     restart: unless-stopped
     environment:
       - OTEL_BASIC_AUTH=${OTEL_BASIC_AUTH}
@@ -47,6 +48,7 @@ services:
     container_name: prometheus_ak0
     image: prom/prometheus:v3.1.0
     profiles: ["no-grafana", "full"]
+    user: nobody:nobody
     command: --config.file=/etc/prometheus/prometheus.yml --web.config.file=/etc/prometheus/prometheus_web_config.yaml --web.enable-otlp-receiver
     restart: unless-stopped
     volumes:
@@ -78,6 +80,9 @@ services:
     volumes:
       - grafana-data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./configs/certs/grafana.crt:/etc/grafana/grafana.crt
+      - ./configs/certs/private/grafana.key:/etc/grafana/grafana.key
+      - ./configs/grafana.ini:/etc/grafana/grafana.ini
     logging:
       driver: "json-file"
       options:
