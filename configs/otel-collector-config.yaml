@@ -28,7 +28,7 @@ exporters:
       key_file: /etc/ssl/certs/private/otel.key
       ca_file: /etc/ssl/certs/ak0_ca.crt
     headers:
-      Authorization: "Basic ${OTEL_BASIC_AUTH}"
+      Authorization: "Basic ${BASIC_AUTH}"
 
 extensions:
   health_check:
