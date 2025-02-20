@@ -111,8 +111,8 @@ chmod 644 certs/grafana.crt
 
 chown 10001:10001 certs/private/otel.key
 chown 10001:10001 certs/otel.crt
-chown nobody:nobody certs/private/prometheus.key
-chown nobody:nobody certs/prometheus.crt
+chown 65534:65534 certs/private/prometheus.key
+chown 65534:65534 certs/prometheus.crt
 chown 472:472 certs/private/grafana.key
 chown 472:472 certs/grafana.crt
 
