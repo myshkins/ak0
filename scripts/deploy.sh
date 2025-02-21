@@ -22,6 +22,7 @@ scp ./.env pgum:/home/iceking/.local/ak0/
 ssh pgum << 'EOF'
   cd /home/iceking/.local/ak0/
   docker compose --profile full -f compose.yaml -f compose.prod.yaml down
+  docker rm ak0_web
   docker image rm ak0:latest
   docker load -i /home/iceking/data/ak0/images/ak0_image
   cd /home/iceking/apps/ak0
