@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"context"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -117,7 +118,7 @@ func FilterBots(bl *BlockList, h http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		ipaddr := helpers.GetIpAddr(r)
 		user_agent := r.Header.Get("User-Agent")
-		if isBlocked(bl, r) {
+		if isBlocked(bl, r) || isMaliciousRequestPath(bl, r) {
 			slog.LogAttrs(
 				r.Context(),
 				slog.LevelInfo,
@@ -129,22 +130,26 @@ func FilterBots(bl *BlockList, h http.Handler) http.Handler {
 			return
 		}
 
-		if crawlerdetect.IsCrawler(user_agent) || isMaliciousRequestPath(bl, r) {
+		if crawlerdetect.IsCrawler(user_agent) {
 			slog.LogAttrs(
 				r.Context(),
 				slog.LevelInfo,
 				"bot found",
 				slog.String(ipaddr, user_agent),
 			)
-			botCounter.Add(r.Context(), 1)
+			hctx := context.WithValue(r.Context(), "isBot", "true")
+      r = r.WithContext(hctx)
+      botCounter.Add(r.Context(), 1)
 		} else {
-			humanCounter.Add(r.Context(), 1)
 			slog.LogAttrs(
 				r.Context(),
 				slog.LevelInfo,
-				"human request served",
+				"request from a possible human served",
 				slog.String(ipaddr, user_agent),
 			)
+      hctx := context.WithValue(r.Context(), "isBot", "false")
+      r = r.WithContext(hctx)
+			humanCounter.Add(r.Context(), 1)
 		}
 		/*
 		   TODO: implement additonal bot filtering

@@ -1,8 +1,6 @@
 package handlers
 
 import (
-  "context"
-	"log/slog"
 	"net/http"
 	"os"
 
@@ -14,19 +12,32 @@ var meter = otel.Meter("github.com/myshkins/ak0")
 
 
 func HandleHome() http.Handler {
-	// do necessary prep work here
-	slog.Info("HandleHome was called")
-
-	apiCounter, err := meter.Int64Counter(
-		"test.counter",
-		metric.WithDescription("Number of calls for HandleHome"),
+	homeRequestCounter, err := meter.Int64Counter(
+		"homeVisit.counter",
+		metric.WithDescription("Number of bot/human requests on /"),
 		metric.WithUnit("{call}"),
 	)
 	if err != nil {
 		panic(err)
 	}
-  ctx := context.Background()
-  c := context.WithValue(ctx, "ak02contextest", "hewo")
+
+	botHomeRequestCounter, err := meter.Int64Counter(
+		"botHomeVisit.counter",
+    metric.WithDescription("Number of bot reqeust on /"),
+		metric.WithUnit("{call}"),
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	humanHomeRequestCounter, err := meter.Int64Counter(
+		"humanHomeVisit.counter",
+		metric.WithDescription("Number of human requests on /"),
+		metric.WithUnit("{call}"),
+	)
+	if err != nil {
+		panic(err)
+	}
 
   fp := "/home/myshkins/projects/ak0/web/dist"
 	if os.Getenv("AK0_ENV") == "prod" {
@@ -34,10 +45,15 @@ func HandleHome() http.Handler {
 	}
 	fs := http.FileServer(http.Dir(fp))
 
-	fsWrapper := func() http.Handler {
-		slog.Info("fsWrapper was called")
-    apiCounter.Add(c, 1)
-		return fs
-	}
-	return fsWrapper()
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+    if r.URL.Path == "/" {
+      homeRequestCounter.Add(r.Context(), 1)
+      if r.Context().Value("isBot") == "true" {
+        botHomeRequestCounter.Add(r.Context(), 1)
+      } else {
+        humanHomeRequestCounter.Add(r.Context(), 1)
+      }
+    }
+    fs.ServeHTTP(w, r)
+  })
 }
