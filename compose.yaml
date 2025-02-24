@@ -81,9 +81,10 @@ services:
       - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
       - GF_USERS_ALLOW_SIGN_UP=false
+      - GRAFANA_BASIC_AUTH=${GRAFANA_BASIC_AUTH}
     volumes:
       - grafana-data:/var/lib/grafana
-      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./configs/certs/ak0_ca.crt:/etc/grafana/ak0_ca.crt:ro
       - ./configs/certs/grafana.crt:/etc/grafana/grafana.crt
       - ./configs/certs/private/grafana.key:/etc/grafana/grafana.key
