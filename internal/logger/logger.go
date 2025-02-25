@@ -48,7 +48,10 @@ func ListenForLogrotate(oldfile *os.File) {
 				fmt.Println("logger sigChan received USR1, rotating logs")
 				l, f := NewLogger()
 				slog.SetDefault(l)
-				oldfile.Close()
+        err := oldfile.Close()
+        if err != nil {
+          fmt.Printf("\nak0 Logger: error closing old log file: %v\n", err.Error())
+        }
 				oldfile = f
 			case syscall.SIGTERM:
 				fmt.Println("logger sigChan received sigterm, shutting down")

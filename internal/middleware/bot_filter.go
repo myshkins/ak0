@@ -134,7 +134,7 @@ func FilterBots(bl *BlockList, h http.Handler) http.Handler {
 			slog.LogAttrs(
 				r.Context(),
 				slog.LevelInfo,
-				"bot found",
+				"bot request detected",
 				slog.String(ipaddr, user_agent),
 			)
 			hctx := context.WithValue(r.Context(), "isBot", "true")
