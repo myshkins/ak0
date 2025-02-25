@@ -26,8 +26,6 @@ ssh -F /home/myshkins/.ssh/config pgum << 'EOF'
   docker load -i /home/iceking/data/ak0/images/ak0_image
   cd /home/iceking/apps/ak0
   git pull
-  cd /home/iceking/.local/ak0/
-  docker compose --profile full -f compose.yaml -f compose.prod.yaml up -d
 EOF
 
 ssh -F /home/myshkins/.ssh/config rpgum << 'EOF'
