@@ -7,6 +7,8 @@ echo ""
 echo "running export.sh"
 # create this hacky run location that avoids needing sudo
 mkdir -p /home/iceking/.local/ak0/
+# make sure it's empty
+rm -rf /home/iceking/.local/ak0/*
 
 pushd ./.. >/dev/null
 

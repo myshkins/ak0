@@ -44,6 +44,7 @@ CN = prometheus
 DNS.1 = localhost
 DNS.2 = prometheus
 DNS.3 = prometheus.local
+DNS.4 = prometheus_ak0
 IP.1 = 127.0.0.1
 EOF
 
@@ -57,6 +58,7 @@ CN = otelcol
 DNS.1 = localhost
 DNS.2 = otelcol
 DNS.3 = otelcol.local
+DNS.4 = otelcol_ak0
 IP.1 = 127.0.0.1
 EOF
 
@@ -70,6 +72,7 @@ CN = grafana
 DNS.1 = localhost
 DNS.2 = grafana
 DNS.3 = grafana.local
+DNS.4 = grafana_ak0
 IP.1 = 127.0.0.1
 EOF
 
@@ -99,15 +102,15 @@ openssl x509 -req -in certs/grafana.csr -CA certs/ak0_ca.crt -CAkey certs/privat
   -CAcreateserial -out certs/grafana.crt -days 36500 -sha256 -extensions req_ext \
   -extfile certs/grafana.cnf
 
-# Set proper permissions
+# todo: set proper permissions, why doesn't this work with the correct perms
 chmod 600 certs/private/ak0_ca.key
 chmod 600 certs/private/prometheus.key
 chmod 600 certs/private/otel.key
 chmod 600 certs/private/grafana.key
-chmod 644 certs/ak0_ca.crt
-chmod 644 certs/prometheus.crt
-chmod 644 certs/otel.crt
-chmod 644 certs/grafana.crt
+chmod 666 certs/ak0_ca.crt
+chmod 666 certs/prometheus.crt
+chmod 666 certs/otel.crt
+chmod 666 certs/grafana.crt
 
 chown 10001:10001 certs/private/otel.key
 chown 10001:10001 certs/otel.crt

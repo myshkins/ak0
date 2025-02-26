@@ -27,6 +27,7 @@ exporters:
       cert_file: /etc/ssl/certs/otel.crt
       key_file: /etc/ssl/certs/private/otel.key
       ca_file: /etc/ssl/certs/ak0_ca.crt
+      insecure_skip_verify: false
     headers:
       Authorization: "Basic ${BASIC_AUTH}"
 

@@ -26,7 +26,7 @@ services:
     volumes:
       - ./configs/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
       - ./configs/certs/otel.crt:/etc/ssl/certs/otel.crt
-      - ./configs/certs/ak0_ca.crt:/etc/ssl/certs/ak0_ca.crt:ro
+      - ./configs/certs/ak0_ca.crt:/etc/ssl/certs/ak0_ca.crt
       - ./configs/certs/private/otel.key:/etc/ssl/certs/private/otel.key
     logging:
       driver: "json-file"
@@ -54,7 +54,7 @@ services:
     volumes:
       - ./configs/prometheus.yaml:/etc/prometheus/prometheus.yml
       - ./configs/prometheus_web_config.yaml:/etc/prometheus/prometheus_web_config.yaml
-      - ./configs/certs/ak0_ca.crt:/etc/ssl/certs/ak0_ca.crt:ro
+      - ./configs/certs/ak0_ca.crt:/etc/ssl/certs/ak0_ca.crt
       - ./configs/certs/prometheus.crt:/etc/ssl/certs/prometheus.crt
       - ./configs/certs/private/prometheus.key:/etc/ssl/certs/private/prometheus.key
     logging:
@@ -85,7 +85,7 @@ services:
     volumes:
       - grafana-data:/var/lib/grafana
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
-      - ./configs/certs/ak0_ca.crt:/etc/grafana/ak0_ca.crt:ro
+      - ./configs/certs/ak0_ca.crt:/etc/grafana/ak0_ca.crt
       - ./configs/certs/grafana.crt:/etc/grafana/grafana.crt
       - ./configs/certs/private/grafana.key:/etc/grafana/grafana.key
       - ./configs/grafana.ini:/etc/grafana/grafana.ini
