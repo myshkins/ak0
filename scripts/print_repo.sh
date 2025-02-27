@@ -15,7 +15,7 @@ echo -e "\nFile contents:"
 echo "=============="
 
 # Get all files tracked by git (respecting .gitignore)
-git ls-files | while read -r file; do
+git ls-files | grep -v "^vendor/" | grep -v "^web/" | grep -v "print_repo.sh" | while read -r file; do
     # Skip binary files
     if file "$file" | grep -q "binary"; then
         echo -e "\n$file (binary file, contents not shown)"

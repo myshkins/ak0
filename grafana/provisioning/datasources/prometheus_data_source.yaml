@@ -5,7 +5,7 @@ prune: true
 
 datasources:
   - name: prometheus
-    type: prometheus
+    type: Prometheus
     access: proxy
     orgId: 1
     # <string> Sets a custom UID to reference this
@@ -22,13 +22,14 @@ datasources:
     isDefault: true
     # <map> Fields to convert to JSON and store in jsonData.
     jsonData:
-      httpMethod: POST
+      httpMethod: GET
       # manageAlerts: true
       prometheusType: Prometheus
-      prometheusVersion: 2.44.0
+      prometheusVersion: 3.1.0
       cacheLevel: 'High'
       disableRecordingRules: false
       incrementalQueryOverlapWindow: 10m
+      # tlsSkipVerify: true
       tlsAuth: true
       tlsAuthWithCACert: true
     # <map> Fields to encrypt before storing in jsonData.

@@ -107,10 +107,10 @@ chmod 600 certs/private/ak0_ca.key
 chmod 600 certs/private/prometheus.key
 chmod 600 certs/private/otel.key
 chmod 600 certs/private/grafana.key
-chmod 666 certs/ak0_ca.crt
-chmod 666 certs/prometheus.crt
-chmod 666 certs/otel.crt
-chmod 666 certs/grafana.crt
+chmod 644 certs/ak0_ca.crt
+chmod 644 certs/prometheus.crt
+chmod 644 certs/otel.crt
+chmod 644 certs/grafana.crt
 
 chown 10001:10001 certs/private/otel.key
 chown 10001:10001 certs/otel.crt
