@@ -3,7 +3,8 @@ services:
     container_name: ak0
     image: ak0
     profiles: ["no-grafana", "full"]
-    user: 1000:1000
+    user: "0"
+    # user: 1000:1000
     restart: unless-stopped
     ports:
       - 8200:8200
@@ -19,7 +20,8 @@ services:
     container_name: otelcol_ak0
     image: otel/opentelemetry-collector-contrib:0.119.0
     profiles: ["no-grafana", "full"]
-    user: 10001:10001
+    user: 0:0
+    # user: 10001:10001
     restart: unless-stopped
     environment:
       - BASIC_AUTH=${BASIC_AUTH}
@@ -48,7 +50,8 @@ services:
     container_name: prometheus_ak0
     image: prom/prometheus:v3.1.0
     profiles: ["no-grafana", "full"]
-    user: 65534:65534
+    user: 0:0
+    # user: 65534:65534
     command: --config.file=/etc/prometheus/prometheus.yml --web.config.file=/etc/prometheus/prometheus_web_config.yaml --web.enable-otlp-receiver
     restart: unless-stopped
     volumes:
@@ -71,7 +74,8 @@ services:
     container_name: grafana_ak0
     image: grafana/grafana-oss:11.5.1
     profiles: ["full"]
-    user: 472:472
+    user: 0:0
+    # user: 472:472
     restart: unless-stopped
     environment:
       - BASIC_AUTH=${BASIC_AUTH}
