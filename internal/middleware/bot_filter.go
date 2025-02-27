@@ -27,6 +27,12 @@ type BlockList struct {
 	Mu                  sync.Mutex
 }
 
+type contextKey string
+
+const (
+  IsBotKey contextKey = "isBot"
+)
+
 var meter = otel.Meter("github.com/myshkins/ak0")
 
 func NewBlockList() *BlockList {
@@ -137,7 +143,7 @@ func FilterBots(bl *BlockList, h http.Handler) http.Handler {
 				"bot request detected",
 				slog.String(ipaddr, user_agent),
 			)
-			hctx := context.WithValue(r.Context(), "isBot", "true")
+			hctx := context.WithValue(r.Context(), IsBotKey, "true")
       r = r.WithContext(hctx)
       botCounter.Add(r.Context(), 1)
 		} else {
@@ -147,7 +153,7 @@ func FilterBots(bl *BlockList, h http.Handler) http.Handler {
 				"request from a possible human served",
 				slog.String(ipaddr, user_agent),
 			)
-      hctx := context.WithValue(r.Context(), "isBot", "false")
+      hctx := context.WithValue(r.Context(), IsBotKey, "false")
       r = r.WithContext(hctx)
 			humanCounter.Add(r.Context(), 1)
 		}

@@ -5,7 +5,7 @@ prune: true
 
 datasources:
   - name: prometheus
-    type: Prometheus
+    type: prometheus
     access: proxy
     orgId: 1
     # <string> Sets a custom UID to reference this
@@ -24,7 +24,7 @@ datasources:
     jsonData:
       httpMethod: GET
       # manageAlerts: true
-      prometheusType: Prometheus
+      prometheusType: prometheus
       prometheusVersion: 3.1.0
       cacheLevel: 'High'
       disableRecordingRules: false
