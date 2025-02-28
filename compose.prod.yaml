@@ -4,3 +4,7 @@ services:
     volumes:
       - /var/log/ak0/ak0.log:/ak0.log
 
+  grafana:
+    environment:
+      - GF_SERVER_ROOT_URL=https://ak0.io/grafana
+      - GF_SERVER_SERVE_FROM_SUB_PATH = true

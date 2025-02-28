@@ -3,6 +3,10 @@ script=$(readlink -f "$0")
 script_path=$(dirname "$script")
 cd $script_path
 
+# todo: add better error handling
+# this doesn't work well for command run via ssh heredoc
+set -e
+
 echo ""
 echo "running export.sh"
 # create this hacky run location that avoids needing sudo

@@ -1,8 +1,0 @@
-services:
-  ak0:
-    volumes:
-      - ./dev.log:/ak0.log
-  grafana:
-    environment:
-      - GF_SERVER_ROOT_URL=https://localhost:3000/grafana
-      - GF_SERVER_SERVE_FROM_SUB_PATH = false

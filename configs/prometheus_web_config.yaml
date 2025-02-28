@@ -1,10 +1,3 @@
-tls_server_config:
-  cert_file: /etc/ssl/certs/prometheus.crt
-  key_file: /etc/ssl/certs/private/prometheus.key
-  client_auth_type: NoClientCert
-  # client_auth_type: RequireAndVerifyClientCert
-  # client_ca_file: /etc/ssl/certs/ak0_ca.crt
-
 # Usernames and hashed passwords that have full access to the web
 # server via basic authentication. If empty, no basic authentication is
 # required. Passwords are hashed with bcrypt.

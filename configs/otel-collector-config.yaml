@@ -21,13 +21,13 @@ exporters:
     verbosity: detailed
 
   otlphttp:
-    endpoint: https://prometheus:9090/api/v1/otlp
-    tls:
+    endpoint: http://prometheus:9090/api/v1/otlp
+    # tls:
       # insecure: true
-      cert_file: /etc/ssl/certs/otel.crt
-      key_file: /etc/ssl/certs/private/otel.key
-      ca_file: /etc/ssl/certs/ak0_ca.crt
-      insecure_skip_verify: true
+      # cert_file: /etc/ssl/certs/otel.crt
+      # key_file: /etc/ssl/certs/private/otel.key
+      # ca_file: /etc/ssl/certs/ak0_ca.crt
+      # insecure_skip_verify: true
     headers:
       Authorization: "Basic ${BASIC_AUTH}"
 

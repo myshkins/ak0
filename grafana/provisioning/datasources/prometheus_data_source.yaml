@@ -8,16 +8,9 @@ datasources:
     type: prometheus
     access: proxy
     orgId: 1
-    # <string> Sets a custom UID to reference this
-    # data source in other parts of the configuration.
-    # If not specified, Grafana generates one.
-    # uid: my_unique_uid
-    url: https://prometheus:9090
-    # <bool> Enables basic authorization.
+    url: http://prometheus:9090
     basicAuth: true
-    # <string> Sets the basic authorization username.
     basicAuthUser: admin
-    # <bool> Enables credential headers.
     withCredentials: true
     isDefault: true
     # <map> Fields to convert to JSON and store in jsonData.
@@ -26,20 +19,12 @@ datasources:
       # manageAlerts: true
       prometheusType: prometheus
       prometheusVersion: 3.1.0
-      cacheLevel: 'High'
-      disableRecordingRules: false
-      incrementalQueryOverlapWindow: 10m
-      # tlsSkipVerify: true
-      tlsAuth: true
-      tlsAuthWithCACert: true
-    # <map> Fields to encrypt before storing in jsonData.
+      # cacheLevel: 'High'
+      # disableRecordingRules: false
+      # incrementalQueryOverlapWindow: 10m
+        # <map> Fields to encrypt before storing in jsonData.
     secureJsonData:
-      # <string> Defines the CA cert, client cert, and
-      # client key for encrypted authentication.
-      tlsCACert: $__file{/etc/grafana/ak0_ca.crt}
-      tlsClientCert: $__file{/etc/grafana/grafana.crt}
-      tlsClientKey: $__file{/etc/grafana/grafana.key}
-      # <string> Sets the basic authorization password.
+          # <string> Sets the basic authorization password.
       basicAuthPassword: $GRAFANA_BASIC_AUTH
     # <int> Sets the version. Used to compare versions when
     # updating. Ignored when creating a new data source.
