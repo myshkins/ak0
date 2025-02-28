@@ -95,7 +95,8 @@ func main() {
   }
 
   slogger, logfile := logger.NewLogger()
-  logger.ListenForLogrotate(logfile)
+  loggerCtx := context.Background()
+  logger.ListenForLogrotate(logfile, loggerCtx)
 
   ctx := context.Background()
   if err := run(ctx, os.Stdout, slogger, os.Args); err != nil {

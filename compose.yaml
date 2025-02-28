@@ -3,15 +3,11 @@ services:
     container_name: ak0
     image: ak0
     profiles: ["no-grafana", "full"]
-    user: 1000:1000
+    user: 65532:65532
     restart: unless-stopped
     ports:
       - 8200:8200
-    volumes:
-      - ./dev.log:/ak0.log
     environment:
-      - GF_SERVER_ROOT_URL=http://localhost:3000/grafana
-      - GF_SERVER_SERVE_FROM_SUB_PATH = false
       - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://otelcol:4318/v1/metrics
       - OTEL_RESOURCE_ATTRIBUTES="service.name=ak0,service.version=0.0.1"
     depends_on:
@@ -29,9 +25,6 @@ services:
       - BASIC_AUTH=${BASIC_AUTH}
     volumes:
       - ./configs/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
-      # - ./configs/certs/otel.crt:/etc/ssl/certs/otel.crt
-      # - ./configs/certs/ak0_ca.crt:/etc/ssl/certs/ak0_ca.crt
-      # - ./configs/certs/private/otel.key:/etc/ssl/certs/private/otel.key
     logging:
       driver: "json-file"
       options:
@@ -58,9 +51,6 @@ services:
     volumes:
       - ./configs/prometheus.yaml:/etc/prometheus/prometheus.yml
       - ./configs/prometheus_web_config.yaml:/etc/prometheus/prometheus_web_config.yaml
-      # - ./configs/certs/ak0_ca.crt:/etc/ssl/certs/ak0_ca.crt
-      # - ./configs/certs/prometheus.crt:/etc/ssl/certs/prometheus.crt
-      # - ./configs/certs/private/prometheus.key:/etc/ssl/certs/private/prometheus.key
     logging:
       driver: "json-file"
       options:
@@ -84,9 +74,6 @@ services:
       - CLIENT_KEY=/etc/grafana/grafana.key
       - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
-      - GF_SERVER_ROOT_URL=http://localhost:3000
-      - GF_SERVER_SERVE_FROM_SUB_PATH = false
-
       - GF_USERS_ALLOW_SIGN_UP=false
       - GRAFANA_BASIC_AUTH=${GRAFANA_BASIC_AUTH}
       - GRAFANA_PROMETHEUS_DATASOURCE_URL=http://prometheus:9090
@@ -94,9 +81,6 @@ services:
       - grafana-data:/var/lib/grafana
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./configs/grafana.ini:/etc/grafana/grafana.ini
-      # - ./configs/certs/ak0_ca.crt:/etc/grafana/ak0_ca.crt
-      # - ./configs/certs/grafana.crt:/etc/grafana/grafana.crt
-      # - ./configs/certs/private/grafana.key:/etc/grafana/grafana.key
     logging:
       driver: "json-file"
       options:

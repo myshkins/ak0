@@ -7,10 +7,10 @@
     delaycompress
     missingok
     notifempty
-    create 0640 iceking iceking
+    create 0640 65532 65532
     olddir /var/log/ak0/old_logs
-    su iceking iceking
+    su 65532 65532
     postrotate
-        docker kill --signal=USR1 ak0_web
+        su - iceking -c "docker kill --signal=USR1 ak0"
     endscript
 }

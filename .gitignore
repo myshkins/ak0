@@ -9,4 +9,4 @@ examples.nix
 configs/certs/*
 result
 web/vite.config.js.timestamp-*
-
+prompt
