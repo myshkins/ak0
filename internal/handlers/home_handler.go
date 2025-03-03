@@ -1,16 +1,17 @@
 package handlers
 
 import (
-	"embed"
-	"io/fs"
+	// "embed"
+	// "io/fs"
 	"net/http"
+  "os"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/metric"
 )
 
-//go:embed dist/*
-var dist embed.FS
+//zo:embed dist/*
+// var dist embed.FS
 
 var meter = otel.Meter("github.com/myshkins/ak0")
 
@@ -42,11 +43,16 @@ func HandleHome() http.Handler {
 		panic(err)
 	}
 
-  staticFiles, err := fs.Sub(dist, "dist")
-  if err != nil {
-    panic(err)
+  fp := "/home/myshkins/projects/ak0/web/dist"
+  if os.Getenv("AK0_ENV") == "prod" {
+    fp = "/lib/node_modules/ak02/dist"
   }
-	fs := http.FileServer(http.FS(staticFiles))
+  fs := http.FileServer(http.Dir(fp))
+ //  staticFiles, err := fs.Sub(dist, "dist")
+ //  if err != nil {
+ //    panic(err)
+ //  }
+	// fs := http.FileServer(http.FS(staticFiles))
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
     if r.URL.Path == "/" {

@@ -49,6 +49,7 @@ services:
     command: --config.file=/etc/prometheus/prometheus.yml --web.config.file=/etc/prometheus/prometheus_web_config.yaml --web.enable-otlp-receiver
     restart: unless-stopped
     volumes:
+      - prometheus-data:/prometheus
       - ./configs/prometheus.yaml:/etc/prometheus/prometheus.yml
       - ./configs/prometheus_web_config.yaml:/etc/prometheus/prometheus_web_config.yaml
     logging:
@@ -79,7 +80,7 @@ services:
       - GRAFANA_PROMETHEUS_DATASOURCE_URL=http://prometheus:9090
     volumes:
       - grafana-data:/var/lib/grafana
-      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./configs/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./configs/grafana.ini:/etc/grafana/grafana.ini
     logging:
       driver: "json-file"
@@ -95,6 +96,7 @@ services:
 
 volumes:
   grafana-data: {}
+  prometheus-data: {}
 
 networks:
   default-network:

@@ -21,7 +21,6 @@ cp -r \
   compose.yaml \
   compose.prod.yaml \
   configs \
-  grafana \
   /home/iceking/.local/ak0/
 
 echo "export.sh complete"

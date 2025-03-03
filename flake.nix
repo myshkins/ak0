@@ -26,12 +26,12 @@
           vendorHash = null;
         };
 
-        # frontend = pkgs.buildNpmPackage {
-        #   pname = "ak0-frontend";
-        #   version = "0.0.1";
-        #   src = ./web;
-        #   npmDepsHash = "sha256-InkMefNQA6e3Ul8PY8pkpXSCqaysGh10t7C683AS5LA=";
-        # };
+        frontend = pkgs.buildNpmPackage {
+          pname = "ak0-frontend";
+          version = "0.0.1";
+          src = ./web;
+          npmDepsHash = "sha256-InkMefNQA6e3Ul8PY8pkpXSCqaysGh10t7C683AS5LA=";
+        };
 
         docker = pkgs.dockerTools.streamLayeredImage {
           name = "ak0";
@@ -49,6 +49,7 @@
           };
           contents = [
             self.packages.${system}.backend
+            self.packages.${system}.frontend
           ];
           fakeRootCommands = ''
             mkdir /ak0
