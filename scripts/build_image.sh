@@ -26,6 +26,9 @@ if [[ -n $(git status --porcelain ) ]]; then
 done
 fi
 
+# copy web/dist to handler dir for go file embed
+cp -r ../web/dist/ ../internal/handlers/dist/
+
 if docker image ls "${image_name}" | grep "${image_name}" >/dev/null 2>&1; then
   echo "removing old docker image ${image_name}"
   docker image rm "${image_name}:latest"

@@ -38,10 +38,10 @@ while [ "$1" != "" ]; do
 done
 
 docker_volume_flag=""
-if [[ "$remove_volumes" == true ]];then
+if [[ "$remove_volumes" == "true" ]];then
+  echo "will remove docker volumes"
   docker_volume_flag="-v"
 fi
-
 
 if [[ "$build_image" == "true" ]];then
   # todo: fix error handling

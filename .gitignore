@@ -1,5 +1,5 @@
 **/node_modules/
-**/dist/
+**web/dist/
 build/*
 .env
 cmd/ak0/ak0
