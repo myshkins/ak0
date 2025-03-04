@@ -8,7 +8,7 @@ const NavBar = () => {
             <ul className='nav-links'>
                 <li><a href="https://blog.ak0.io" className="nav-link">blog</a></li>
                 <li><a href="https://blog.ak0.io" className="nav-link">contact</a></li>
-                <li><a href="https://ak0.io/static/resume_Alex_Krenitsky.pdf" className="nav-link">resume</a></li>
+                <li><a href="/resume_Alex_Krenitsky.pdf" className="nav-link">resume</a></li>
             </ul>
         </div>
     )

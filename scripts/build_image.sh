@@ -8,7 +8,11 @@ echo ""
 echo "running build_image.sh"
 image_name="ak0"
 
-# build ak0 image locally
+# build and copy web/dist to handler dir for go file embed
+./build_frontend.sh
+cp -r ../web/dist/* ../internal/handlers/dist/
+cp /home/myshkins/projects/job_search/resume/resume_Alex_Krenitsky.pdf ../internal/handlers/dist/resume_Alex_Krenitsky.pdf
+
 if docker ps -aq | grep "${image_name}" >/dev/null 2>&1; then
   echo "There are some existing containers. Prob wanna remove em first"
   exit 1
@@ -25,9 +29,6 @@ if [[ -n $(git status --porcelain ) ]]; then
     esac
 done
 fi
-
-# copy web/dist to handler dir for go file embed
-cp -r ../web/dist/ ../internal/handlers/dist/
 
 if docker image ls "${image_name}" | grep "${image_name}" >/dev/null 2>&1; then
   echo "removing old docker image ${image_name}"

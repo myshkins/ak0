@@ -4,8 +4,8 @@ import (
 	"embed"
 	"io/fs"
 	"net/http"
-  // "os"
 
+	"github.com/myshkins/ak0/internal/middleware"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/metric"
 )
@@ -43,11 +43,6 @@ func HandleHome() http.Handler {
 		panic(err)
 	}
 
-  // fp := "/home/myshkins/projects/ak0/web/dist"
-  // if os.Getenv("AK0_ENV") == "prod" {
-  //   fp = "/lib/node_modules/ak02/dist"
-  // }
-  // fs := http.FileServer(http.Dir(fp))
   staticFiles, err := fs.Sub(dist, "dist")
   if err != nil {
     panic(err)
@@ -57,7 +52,7 @@ func HandleHome() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
     if r.URL.Path == "/" {
       homeRequestCounter.Add(r.Context(), 1)
-      if r.Context().Value("isBot") == "true" {
+      if r.Context().Value(middleware.IsBotKey) == "true" {
         botHomeRequestCounter.Add(r.Context(), 1)
       } else {
         humanHomeRequestCounter.Add(r.Context(), 1)
