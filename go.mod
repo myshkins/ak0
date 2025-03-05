@@ -6,6 +6,7 @@ toolchain go1.23.4
 
 require (
 	github.com/felixge/httpsnoop v1.0.4
+	github.com/gomarkdown/markdown v0.0.0-20250207164621-7a1f277a159e
 	github.com/x-way/crawlerdetect v0.2.25
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.59.0
 	go.opentelemetry.io/otel v1.34.0

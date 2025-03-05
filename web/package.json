@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "blog-dev": "../scripts/start_blog_dev.sh"
   },
   "dependencies": {
     "react": "^18.2.0",

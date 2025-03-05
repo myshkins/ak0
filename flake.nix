@@ -97,6 +97,7 @@
             bash
             go
             gopls
+            hugo
             nodejs_22
             nil
             pythonEnv

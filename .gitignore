@@ -10,3 +10,4 @@ configs/certs/*
 result
 web/vite.config.js.timestamp-*
 prompt
+prompt.txt
