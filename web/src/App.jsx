@@ -5,6 +5,7 @@ import Hero from "./components/Hero";
 import SkillsBox from "./components/SkillsBox";
 import Projects from "./components/Projects";
 import ProjectCard from "./components/ProjectCard";
+import { GRAFANA_URL } from "./components/Constants";
 
 function App() {
   return (
@@ -19,6 +20,11 @@ function App() {
           title={"jupiter coffee"}
           img="https://ak0-io.us-east-1.linodeobjects.com/screenshot-jupiter.webp"
           text={blurbs.jupiter} />
+        <ProjectCard
+          link={GRAFANA_URL}
+          title={"ak0 metrics"}
+          img="https://ak0-io.us-east-1.linodeobjects.com/screenshot-ak0-metrics.webp"
+          text={blurbs.ak0_metrics} />
         <ProjectCard
           link="https://airboo.ak0.io"
           title={"airboo"}

@@ -1,3 +1,5 @@
+import { GRAFANA_URL } from "./Constants"
+
 const blurbs = {
   airboo: [
     `My brother and I wanted to collaborate on a project, and us both being 
@@ -60,7 +62,19 @@ const blurbs = {
     <a href="https://gopetwatch.ak0.io">here</a>,
     ` to see the app, or the `,
     <a href="https://github.com/myshkins/gopetwatch">Github repo</a>,
-    ` for this project.`
+    ` for this project.`,
+  ],
+  ak0_metrics: [
+    `I thought it might be interesting to share a little about the monitoring that
+     I have set up for this site. I did a lot more than was necessary just for the 
+     the sake of learning, and I'm planning on writing a blog post about how I
+     set everything up, but here's a brief overview. This site is a simple webapp
+     written in Go, and I instrumented it with Opentelemetry to collect http 
+     metrics. I'm using docker compose to run my webapp, an Opentelemetry collector, 
+     a Prometheus backend, and a Grafana instance. I've set up view only access for
+     my grafana dashboard `,
+     <a href={GRAFANA_URL}>here</a>,
+    `.`,
   ],
 }
 
