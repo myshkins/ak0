@@ -12,9 +12,30 @@
       let
         lastModifiedDate = self.lastModifiedDate or self.lastModified or "19700101";
         version = builtins.substring 0 8 lastModifiedDate;
-        pkgs = import nixpkgs { inherit system; };
+
+        # Create an overlay to pin Python package versions
+        pythonOverlay = final: prev: {
+          python3 = prev.python3.override {
+            packageOverrides = pyFinal: pyPrev: {
+              markdown = pyPrev.markdown.overridePythonAttrs (old: rec {
+                version = "3.6";
+                src = prev.fetchPypi {
+                  inherit version;
+                  pname = "Markdown";
+                  hash = "sha256-7U9B9trsvuuW5XbOQUxB0th22qmhbLNfqO2MLd+tAiQ=";
+                };
+              });
+            };
+          };
+        };
+
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ pythonOverlay ];
+        };
         pythonEnv = pkgs.python3.withPackages (ps: with ps; [
           bcrypt
+          markdown
         ]);
 
     in {
