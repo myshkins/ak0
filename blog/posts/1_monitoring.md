@@ -1,6 +1,8 @@
-Here is a sample blog post.
+### cool title bro
+Here is a sample blog post. This could be something like a long intro paragraph that has some intro stuff. like what is it all about really? Let me tell you cuz I know.
 
-Here is a code snippet:
+##### this would be a header
+So here is the first paragraph and I'll get into some juicy deails right off the bat. Take a look at this stuff below here. Here is a code snippet:
 ```go
 package helpers
 
@@ -22,6 +24,7 @@ func GetIpAddr(r *http.Request) string {
 }
 ```
 
-Here is a sample [image](/home/myshkins/pics/synced_pics/selfie.jpeg), showing me.
+##### another one
+And now here's some more cool stuff to wet your eyeballs. Here is a sample [image](/home/myshkins/pics/synced_pics/selfie.jpeg), showing me.
 
 Here is some **bold text** and some __italic text__. nice.

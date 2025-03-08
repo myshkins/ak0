@@ -1,5 +1,6 @@
-import NavBar from "./components/NavBar";
+import NavBar from "../components/NavBar";
 import './BlogLayout.css';
+import '../index.css'
 
 function BlogLayout() {
   return (
@@ -10,4 +11,4 @@ function BlogLayout() {
   );
 }
 
-export default BlogLayout();
+export default BlogLayout;
