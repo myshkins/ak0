@@ -43,14 +43,13 @@ func convertMDPostsToHTML() {
     } 
     bytes, err := os.ReadFile(path)
     name := strings.Split(info.Name(), ".")[0]
-    name = fmt.Sprintf("%v.html", name)
+    name = fmt.Sprintf("./html/%v.html", name)
     ap, err := filepath.Abs(name)
     if err != nil {
       fmt.Println(err)
     }
     fmt.Println(ap)
-    os.WriteFile(name, bytes, os.FileMode(os.O_WRONLY))
-    fmt.Println(string(mdToHTML(bytes)))
+    os.WriteFile(name, mdToHTML(bytes), 0644)
     return nil
     },
   )
