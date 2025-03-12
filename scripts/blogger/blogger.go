@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+  "text/template"
 
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
@@ -14,6 +15,21 @@ import (
 
 
 const postDir = "../../blog/posts"
+const jsxTemplate = `
+import NavBar from "../components/NavBar";
+import './BlogLayout.css';
+import '../index.css'
+
+function BlogLayout() {
+  return (
+    <div className="blog-post">
+      <NavBar />
+      <h1>Blog post</h1>
+    </div>
+  );
+}
+
+export default BlogLayout;`
 
 func mdToHTML(md []byte) []byte {
 	extensions := parser.CommonExtensions | parser.NoEmptyLineBeforeBlock
