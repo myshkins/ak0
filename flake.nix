@@ -105,7 +105,7 @@
           shellHook = ''
             if [ ! -d ./web/node_modules ]; then
               pushd web
-              npm install -g live-server
+              npm install live-server
               popd
             fi
           '';
