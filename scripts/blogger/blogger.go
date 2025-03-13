@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-  "text/template"
+  // "text/template"
 
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
