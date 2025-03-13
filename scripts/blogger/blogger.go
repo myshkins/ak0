@@ -13,23 +13,11 @@ import (
 	"github.com/gomarkdown/markdown/parser"
 )
 
-
+/*
+open ``
+*/
 const postDir = "../../blog/posts"
-const jsxTemplate = `
-import NavBar from "../components/NavBar";
-import './BlogLayout.css';
-import '../index.css'
-
-function BlogLayout() {
-  return (
-    <div className="blog-post">
-      <NavBar />
-      <h1>Blog post</h1>
-    </div>
-  );
-}
-
-export default BlogLayout;`
+const jsxTemplate = ``
 
 func mdToHTML(md []byte) []byte {
 	extensions := parser.CommonExtensions | parser.NoEmptyLineBeforeBlock

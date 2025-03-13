@@ -2,6 +2,10 @@
 script=$(readlink -f "$0")
 script_path=$(dirname "$script")
 cd "${script_path}"
-pushd "../web" >/dev/null
-npm run build
-popd >/dev/null
+
+cd "../web" >/dev/null
+
+rm -rf build/*
+mkdir -p build/assets/
+cp -r src/assets/* build/assets/
+../scripts/htmlbuilder/htmlbuilder
