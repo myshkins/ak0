@@ -28,6 +28,7 @@
           inherit version;
           src = ./.;
           vendorHash = null;
+          buildFlags = ["-tags=minimal"];
         };
 
         docker = pkgs.dockerTools.streamLayeredImage {
@@ -45,7 +46,7 @@
             hash = "sha256-p8Hmw0W3AibT1quCFMLmKO7dRMgjS8BXANPOfrQRe5g=";
           };
           contents = [
-            # self.packages.${system}.backend
+            self.packages.${system}.backend
           ];
           fakeRootCommands = ''
             mkdir /ak0

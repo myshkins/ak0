@@ -11,3 +11,5 @@ result
 web/vite.config.js.timestamp-*
 prompt
 prompt.txt
+scripts/blogger/blogger
+scripts/htmlbuilder/htmlbuilder
