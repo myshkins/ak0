@@ -6,18 +6,18 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-  // "text/template"
 
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
 	"github.com/gomarkdown/markdown/parser"
+	"github.com/myshkins/ak0/internal/helpers"
 )
 
-/*
-open ``
-*/
-const postDir = "../../blog/posts"
-const jsxTemplate = ``
+const (
+  postDir = "../../blog/posts"
+  outDir = "../../web/src/pages/"
+)
+
 
 func mdToHTML(md []byte) []byte {
 	extensions := parser.CommonExtensions | parser.NoEmptyLineBeforeBlock
@@ -31,8 +31,8 @@ func mdToHTML(md []byte) []byte {
 	return markdown.Render(doc, renderer)
 }
 
-func convertMDPostsToHTML() {
-  dirPath, err := filepath.Abs(postDir)
+func main() {
+  dirPath, err := helpers.ResolvePath(postDir)
   if err != nil {
     fmt.Println(err.Error())
   }
@@ -46,32 +46,17 @@ func convertMDPostsToHTML() {
       return nil
     } 
     bytes, err := os.ReadFile(path)
+    // add .html extension
     name := strings.Split(info.Name(), ".")[0]
-    name = fmt.Sprintf("./html/%v.html", name)
-    ap, err := filepath.Abs(name)
+    dir, err := helpers.ResolvePath(outDir)
     if err != nil {
-      fmt.Println(err)
+      panic(err)
     }
-    fmt.Println(ap)
-    os.WriteFile(name, mdToHTML(bytes), 0644)
+    fmt.Printf("outDir = %v\n", dir)
+    fp := filepath.Join(dir, name)
+    os.WriteFile(fp, mdToHTML(bytes), 0644)
     return nil
     },
   )
-}
-
-func templateThing() {
-  // execute template
-  // write files to web/src/posts
-}
-
-func main() {
-  /*
-  convert to html
-  execute template
-  write output to web/src/posts/file.jsx
-  */
-
-  convertMDPostsToHTML()
-	// fmt.Printf("--- Markdown:\n%s\n\n--- HTML:\n%s\n", md, html)
 }
 

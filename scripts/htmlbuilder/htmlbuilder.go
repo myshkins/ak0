@@ -5,8 +5,9 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"runtime"
 	"text/template"
+
+  "github.com/myshkins/ak0/internal/helpers"
 )
 
 const (
@@ -21,18 +22,10 @@ type Html struct {
 		Content string
 	}
 
-func resolvePath(relativePath string) (string, error) {
-  _, filename, _, ok := runtime.Caller(0)
-  if !ok {
-    return "", fmt.Errorf("error getting source file path")
-  }
 
-  sourceDir := filepath.Dir(filename)
-  return filepath.Join(sourceDir, relativePath), nil
-}
 
 func main() {
-  tp, err := resolvePath(templatePath)
+  tp, err := helpers.ResolvePath(templatePath)
   if err != nil {
     panic(err)
   }
@@ -43,7 +36,7 @@ func main() {
 
 	var bodies []Html
 
-  dirpath, err := resolvePath(pagesDir)
+  dirpath, err := helpers.ResolvePath(pagesDir)
   if err != nil {
     panic(err)
   }
@@ -59,7 +52,7 @@ func main() {
 			}
 			bytes, err := os.ReadFile(path)
       fp := fmt.Sprintf("../../web/build/%v", info.Name())
-      fp, err = resolvePath(fp)
+      fp, err = helpers.ResolvePath(fp)
 			bodies = append(bodies, Html{fp, string(bytes)})
 			return nil
 		})
