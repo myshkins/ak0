@@ -8,9 +8,7 @@ echo ""
 echo "running build_image.sh"
 image_name="ak0"
 
-# build and copy web/dist to handler dir for go file embed
 ./build_frontend.sh
-cp -r ../web/dist/* ../internal/handlers/dist/
 cp /home/myshkins/projects/job_search/resume/resume_Alex_Krenitsky.pdf ../internal/handlers/dist/resume_Alex_Krenitsky.pdf
 
 if docker ps -aq | grep "${image_name}" >/dev/null 2>&1; then

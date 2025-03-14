@@ -13,11 +13,17 @@ import (
 	"github.com/myshkins/ak0/internal/helpers"
 )
 
+
+/*
+read md post file in blog/posts
+conver to html
+write to web/src/pages
+*/
+
 const (
   postDir = "../../blog/posts"
   outDir = "../../web/src/pages/"
 )
-
 
 func mdToHTML(md []byte) []byte {
 	extensions := parser.CommonExtensions | parser.NoEmptyLineBeforeBlock
@@ -42,17 +48,16 @@ func main() {
       return err
     }
     if info.IsDir() {
-      fmt.Printf("skipping dir: %v\n", info.Name())
       return nil
     } 
     bytes, err := os.ReadFile(path)
     // add .html extension
     name := strings.Split(info.Name(), ".")[0]
+    name = strings.Join([]string{name, ".html"}, "")
     dir, err := helpers.ResolvePath(outDir)
     if err != nil {
       panic(err)
     }
-    fmt.Printf("outDir = %v\n", dir)
     fp := filepath.Join(dir, name)
     os.WriteFile(fp, mdToHTML(bytes), 0644)
     return nil

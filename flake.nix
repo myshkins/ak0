@@ -13,25 +13,8 @@
         lastModifiedDate = self.lastModifiedDate or self.lastModified or "19700101";
         version = builtins.substring 0 8 lastModifiedDate;
 
-        # Create an overlay to pin Python package versions
-        pythonOverlay = final: prev: {
-          python3 = prev.python3.override {
-            packageOverrides = pyFinal: pyPrev: {
-              markdown = pyPrev.markdown.overridePythonAttrs (old: rec {
-                version = "3.6";
-                src = prev.fetchPypi {
-                  inherit version;
-                  pname = "Markdown";
-                  hash = "sha256-7U9B9trsvuuW5XbOQUxB0th22qmhbLNfqO2MLd+tAiQ=";
-                };
-              });
-            };
-          };
-        };
-
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [ pythonOverlay ];
         };
         pythonEnv = pkgs.python3.withPackages (ps: with ps; [
           bcrypt
@@ -46,13 +29,6 @@
           src = ./.;
           vendorHash = null;
         };
-
-        # frontend = pkgs.buildNpmPackage {
-        #   pname = "ak0-frontend";
-        #   version = "0.0.1";
-        #   src = ./web;
-        #   npmDepsHash = "sha256-InkMefNQA6e3Ul8PY8pkpXSCqaysGh10t7C683AS5LA=";
-        # };
 
         docker = pkgs.dockerTools.streamLayeredImage {
           name = "ak0";
@@ -69,8 +45,7 @@
             hash = "sha256-p8Hmw0W3AibT1quCFMLmKO7dRMgjS8BXANPOfrQRe5g=";
           };
           contents = [
-            self.packages.${system}.backend
-            # self.packages.${system}.frontend
+            # self.packages.${system}.backend
           ];
           fakeRootCommands = ''
             mkdir /ak0
