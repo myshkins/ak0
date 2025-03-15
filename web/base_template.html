@@ -18,7 +18,13 @@
         </ul>
     </div>
     <div class="app">
+      {{if .IsBlogPost}}
+      <div class="blogpost">
+      {{end}}
       {{.Content}}
+      {{if .IsBlogPost}}
+      </div>
+      {{end}}
     </div>
   </body>
 </html>

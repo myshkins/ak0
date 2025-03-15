@@ -9,7 +9,6 @@ echo "running build_image.sh"
 image_name="ak0"
 
 ./build_frontend.sh
-cp /home/myshkins/projects/job_search/resume/resume_Alex_Krenitsky.pdf ../internal/handlers/dist/resume_Alex_Krenitsky.pdf
 
 if docker ps -aq | grep "${image_name}" >/dev/null 2>&1; then
   echo "There are some existing containers. Prob wanna remove em first"

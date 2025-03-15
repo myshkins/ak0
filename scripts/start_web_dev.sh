@@ -13,6 +13,8 @@ launch_reflex() {
   cd "${script_path}/.."
   reflex \
     -R "web/build" \
+    -R "scripts" \
+    -R "internal/handlers/dist" \
     -R "web/src/pages" \
     -s --verbose=true \
     -- sh -c './scripts/build_frontend.sh'

@@ -29,6 +29,7 @@ const (
 type Html struct {
 		Fp    string
     Styles  []string
+    IsBlogPost bool
 		Content string
 	}
 
@@ -68,7 +69,12 @@ func main() {
       fp := filepath.Join(absOutdir, info.Name())
 			bodies = append(
         bodies,
-        Html{fp, []string{"assets/post.css", "assets/index.css"}, string(bytes)},
+        Html{
+          fp,
+          []string{"assets/post.css", "assets/index.css"},
+          true,
+          string(bytes),
+        },
       )
 			return nil
 		})
@@ -85,7 +91,12 @@ func main() {
   fp := filepath.Join(absOutdir, "index.html")
   bodies = append(
     bodies,
-    Html{fp, []string{"assets/index.css", "assets/home.css"}, string(bytes)},
+    Html{
+      fp,
+      []string{"assets/index.css", "assets/home.css"},
+      false,
+      string(bytes),
+    },
   )
 
 
