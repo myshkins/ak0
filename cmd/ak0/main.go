@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"embed"
 	"errors"
 	"flag"
 	"fmt"
@@ -21,13 +22,17 @@ import (
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
+//go:embed dist/*
+var dist embed.FS
+
 func NewServerHandler(
 	// config *Config
 	clientRateLimiters *middleware.ClientRateLimiters,
 	blockList *middleware.BlockList,
+  staticFiles *embed.FS,
 ) http.Handler {
 	mux := http.NewServeMux()
-	addRoutes(mux, blockList, clientRateLimiters)
+	addRoutes(mux, blockList, clientRateLimiters, staticFiles)
 	handler := otelhttp.NewHandler(mux, "/")
 
 	go middleware.CleanupRateLimiters(clientRateLimiters) // move this to run?
@@ -50,7 +55,7 @@ func run(ctx context.Context, w io.Writer, slogger *slog.Logger, args []string) 
 
 	crl := middleware.NewClientRateLimiters()
 	bl := middleware.NewBlockList()
-	srv := NewServerHandler(crl, bl)
+  srv := NewServerHandler(crl, bl, &dist)
 	httpServer := &http.Server{
 		ReadTimeout:  120 * time.Second,
 		WriteTimeout: 120 * time.Second,

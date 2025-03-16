@@ -13,6 +13,7 @@ launch_reflex() {
   cd "${script_path}/.."
   reflex \
     -R "web/build" \
+    -R "cmd/ak0/dist" \
     -R "scripts" \
     -R "internal/handlers/dist" \
     -R "web/src/pages" \

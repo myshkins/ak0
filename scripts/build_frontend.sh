@@ -23,5 +23,6 @@ mkdir -p build/assets/
 cp -r src/assets/* build/assets/
 
 # copy web/build to handler dir for go file embed
-cp -r build/* ../internal/handlers/dist/
+mkdir -p ../cmd/ak0/dist/
+cp -r build/* ../cmd/ak0/dist/
 cp /home/myshkins/projects/job_search/resume/resume_Alex_Krenitsky.pdf ../internal/handlers/dist/resume_Alex_Krenitsky.pdf

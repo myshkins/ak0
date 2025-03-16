@@ -10,12 +10,10 @@ import (
 	"go.opentelemetry.io/otel/metric"
 )
 
-//go:embed dist/*
-var dist embed.FS
 
 var meter = otel.Meter("github.com/myshkins/ak0")
 
-func HandleHome() http.Handler {
+func HandleHome(static *embed.FS) http.Handler {
 	homeRequestCounter, err := meter.Int64Counter(
 		"homeVisit.counter",
 		metric.WithDescription("Number of bot/human requests on /"),
@@ -43,7 +41,7 @@ func HandleHome() http.Handler {
 		panic(err)
 	}
 
-  staticFiles, err := fs.Sub(dist, "dist")
+  staticFiles, err := fs.Sub(*static, "dist")
   if err != nil {
     panic(err)
   }
