@@ -11,7 +11,6 @@ import (
 func newMiddleware(
 	b *middleware.BlockList,
 	c *middleware.ClientRateLimiters,
-  s *embed.FS,
 ) func(handler http.Handler) http.Handler {
 	m := func(h http.Handler) http.Handler {
 		return middleware.LoggingMiddleWare(
@@ -29,7 +28,8 @@ func addRoutes(
 	// config Config,
 	// authProxy *authProxy
 ) {
-	m := newMiddleware(bl, crl, static)
+	m := newMiddleware(bl, crl)
 	mux.Handle("/", m(handlers.HandleHome(static)))
+	mux.Handle("/blog", m(handlers.HandleBlog(static)))
 	// mux.Handle("/ping", handlers.Ping())
 }

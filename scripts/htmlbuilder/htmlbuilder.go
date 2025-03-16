@@ -1,4 +1,5 @@
 //go:build !minimal
+
 package main
 
 import (
@@ -6,9 +7,12 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"strings"
 	"text/template"
 
-  "github.com/myshkins/ak0/internal/helpers"
+  "github.com/alecthomas/chroma/v2"
+
+	"github.com/myshkins/ak0/internal/helpers"
 )
 
 /*
@@ -19,11 +23,17 @@ output to web/build/
 
 const (
 	fileMode  = os.O_CREATE | os.O_RDWR
-	filePerms = 0640
+  dirPerms = 0777
+	filePerms = 0666
   templatePath = "../../web/base_template.html"
   indexPath = "../../web/src/index.html"
+  blogPath = "../../web/src/blogIndex.html"
   pagesDir = "../../web/src/pages/"
+  blogOutDir = "../../web/build/blog/"
   outDir = "../../web/build/"
+  indexCss = "/assets/index.css"
+  homeCss = "/assets/home.css"
+  postCss = "/assets/post.css"
   )
 
 type Html struct {
@@ -54,6 +64,22 @@ func main() {
       panic(err)
     }
 
+  // need to create necessary directories
+  // web/build/
+  // web/build/blog/
+  // web/build/blog/eachpost/
+  // use file system as url naviagtion
+  // each dir contains an index.html
+  absBlgOutDir, err := helpers.ResolvePath(blogOutDir)
+  if err != nil {
+    panic(err)
+  }
+  err = os.MkdirAll(absBlgOutDir, dirPerms)
+  if err != nil {
+    panic(err)
+  }
+  // gotta fix walkdir to write to separate dirs
+
   // walk src/pages dir, add fp and content to bodies[]
 	err = filepath.Walk(
     dirpath,
@@ -65,13 +91,19 @@ func main() {
 			if info.IsDir() {
 				return nil
 			}
+      name := strings.Split(info.Name(), ".")[0]
+      postOutDir, err := helpers.ResolvePath(filepath.Join(blogOutDir, name))
+      if err != nil {
+        panic(err)
+      }
+      err = os.Mkdir(postOutDir, dirPerms)
 			bytes, err := os.ReadFile(path)
-      fp := filepath.Join(absOutdir, info.Name())
+      fp := filepath.Join(postOutDir, "index.html")
 			bodies = append(
         bodies,
         Html{
           fp,
-          []string{"assets/post.css", "assets/index.css"},
+          []string{postCss, indexCss},
           true,
           string(bytes),
         },
@@ -82,7 +114,7 @@ func main() {
 		panic(err)
 	}
 
-  // add logic here to handle index. just need to add it to the body slice?
+  // handle index.html
   ifp, err := helpers.ResolvePath(indexPath)
   if err != nil {
     panic(err)
@@ -93,13 +125,28 @@ func main() {
     bodies,
     Html{
       fp,
-      []string{"assets/index.css", "assets/home.css"},
+      []string{indexCss, homeCss},
       false,
       string(bytes),
     },
   )
 
-
+  // handle blogIndex.html
+  bfp, err := helpers.ResolvePath(blogPath)
+  if err != nil {
+    panic(err)
+  }
+  bytes, err = os.ReadFile(bfp)
+  fp = filepath.Join(absBlgOutDir, "index.html")
+  bodies = append(
+    bodies,
+    Html{
+      fp,
+      []string{"/assets/index.css", "/assets/blogIndex.css"},
+      false,
+      string(bytes),
+    },
+  )
 
 	// Create a new template and parse the base_template into it.
 	t := template.Must(template.New("base_template").Parse(string(base_template)))
