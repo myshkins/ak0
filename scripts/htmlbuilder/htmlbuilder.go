@@ -10,8 +10,6 @@ import (
 	"strings"
 	"text/template"
 
-  "github.com/alecthomas/chroma/v2"
-
 	"github.com/myshkins/ak0/internal/helpers"
 )
 

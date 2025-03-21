@@ -1,5 +1,7 @@
 .blogpost {
   margin: 0rem 3rem;
+  width: 75%;
+  max-width: 60rem;
 }
 
 .blogpost h3 {
@@ -10,11 +12,9 @@
 .blogpost pre {
   margin: .5rem;
   padding: 1rem;
-  background: darkgray;
-  border: 2px solid #32a1ce;
+  background: var(--code-bg);
+  border: 1px solid #32a1ce;
   border-radius: 8px;
+  overflow-x: auto;
 }
 
-.blogpost code {
-  color: black;
-}

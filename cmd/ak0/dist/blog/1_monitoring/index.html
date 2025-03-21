@@ -32,27 +32,100 @@
 <h5>this would be a header</h5>
 
 <p>So here is the first paragraph and I&rsquo;ll get into some juicy deails right off the bat. Take a look at this stuff below here. Here is a code snippet:</p>
-
-<pre><code class="language-go">package helpers
-
-import (
-	&quot;net/http&quot;
-)
-
-func GetIpAddr(r *http.Request) string {
-	// default to using custom set header
-	ip := r.Header.Get(&quot;AK-First-External-IP&quot;)
-	if ip != &quot;&quot; {
-		return ip
-	}
-
-	// if above fails for some reason, use RemnoteAddr
-	// note, that will just be the ip of the nginx reverse proxy
-	ip = r.RemoteAddr
-	return ip
-}
-</code></pre>
-
+<pre class="chroma"><code><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">helpers</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;net/http&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">GetIpAddr</span><span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// default to using custom set header</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">ip</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="s">&#34;AK-First-External-IP&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">ip</span> <span class="o">!=</span> <span class="s">&#34;&#34;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">ip</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// if above fails for some reason, use RemnoteAddr</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// note, that will just be the ip of the nginx reverse proxy</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">ip</span> <span class="p">=</span> <span class="nx">r</span><span class="p">.</span><span class="nx">RemoteAddr</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">ip</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre><style>/* Background */ .bg { color: #cdd6f4; background-color: #1e1e2e; }
+/* PreWrapper */ .chroma { color: #cdd6f4; background-color: #1e1e2e; }
+/* Error */ .chroma .err { color: #f38ba8 }
+/* LineLink */ .chroma .lnlinks { outline: none; text-decoration: none; color: inherit }
+/* LineTableTD */ .chroma .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
+/* LineTable */ .chroma .lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; }
+/* LineHighlight */ .chroma .hl { background-color: #45475a }
+/* LineNumbersTable */ .chroma .lnt { white-space: pre; -webkit-user-select: none; user-select: none; margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #7f849c }
+/* LineNumbers */ .chroma .ln { white-space: pre; -webkit-user-select: none; user-select: none; margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #7f849c }
+/* Line */ .chroma .line { display: flex; }
+/* Keyword */ .chroma .k { color: #cba6f7 }
+/* KeywordConstant */ .chroma .kc { color: #fab387 }
+/* KeywordDeclaration */ .chroma .kd { color: #f38ba8 }
+/* KeywordNamespace */ .chroma .kn { color: #94e2d5 }
+/* KeywordPseudo */ .chroma .kp { color: #cba6f7 }
+/* KeywordReserved */ .chroma .kr { color: #cba6f7 }
+/* KeywordType */ .chroma .kt { color: #f38ba8 }
+/* NameAttribute */ .chroma .na { color: #89b4fa }
+/* NameBuiltin */ .chroma .nb { color: #89dceb }
+/* NameBuiltinPseudo */ .chroma .bp { color: #89dceb }
+/* NameClass */ .chroma .nc { color: #f9e2af }
+/* NameConstant */ .chroma .no { color: #f9e2af }
+/* NameDecorator */ .chroma .nd { color: #89b4fa; font-weight: bold }
+/* NameEntity */ .chroma .ni { color: #94e2d5 }
+/* NameException */ .chroma .ne { color: #fab387 }
+/* NameFunction */ .chroma .nf { color: #89b4fa }
+/* NameFunctionMagic */ .chroma .fm { color: #89b4fa }
+/* NameLabel */ .chroma .nl { color: #89dceb }
+/* NameNamespace */ .chroma .nn { color: #fab387 }
+/* NameProperty */ .chroma .py { color: #fab387 }
+/* NameTag */ .chroma .nt { color: #cba6f7 }
+/* NameVariable */ .chroma .nv { color: #f5e0dc }
+/* NameVariableClass */ .chroma .vc { color: #f5e0dc }
+/* NameVariableGlobal */ .chroma .vg { color: #f5e0dc }
+/* NameVariableInstance */ .chroma .vi { color: #f5e0dc }
+/* NameVariableMagic */ .chroma .vm { color: #f5e0dc }
+/* LiteralString */ .chroma .s { color: #a6e3a1 }
+/* LiteralStringAffix */ .chroma .sa { color: #f38ba8 }
+/* LiteralStringBacktick */ .chroma .sb { color: #a6e3a1 }
+/* LiteralStringChar */ .chroma .sc { color: #a6e3a1 }
+/* LiteralStringDelimiter */ .chroma .dl { color: #89b4fa }
+/* LiteralStringDoc */ .chroma .sd { color: #6c7086 }
+/* LiteralStringDouble */ .chroma .s2 { color: #a6e3a1 }
+/* LiteralStringEscape */ .chroma .se { color: #89b4fa }
+/* LiteralStringHeredoc */ .chroma .sh { color: #6c7086 }
+/* LiteralStringInterpol */ .chroma .si { color: #a6e3a1 }
+/* LiteralStringOther */ .chroma .sx { color: #a6e3a1 }
+/* LiteralStringRegex */ .chroma .sr { color: #94e2d5 }
+/* LiteralStringSingle */ .chroma .s1 { color: #a6e3a1 }
+/* LiteralStringSymbol */ .chroma .ss { color: #a6e3a1 }
+/* LiteralNumber */ .chroma .m { color: #fab387 }
+/* LiteralNumberBin */ .chroma .mb { color: #fab387 }
+/* LiteralNumberFloat */ .chroma .mf { color: #fab387 }
+/* LiteralNumberHex */ .chroma .mh { color: #fab387 }
+/* LiteralNumberInteger */ .chroma .mi { color: #fab387 }
+/* LiteralNumberIntegerLong */ .chroma .il { color: #fab387 }
+/* LiteralNumberOct */ .chroma .mo { color: #fab387 }
+/* Operator */ .chroma .o { color: #89dceb; font-weight: bold }
+/* OperatorWord */ .chroma .ow { color: #89dceb; font-weight: bold }
+/* Comment */ .chroma .c { color: #6c7086; font-style: italic }
+/* CommentHashbang */ .chroma .ch { color: #6c7086; font-style: italic }
+/* CommentMultiline */ .chroma .cm { color: #6c7086; font-style: italic }
+/* CommentSingle */ .chroma .c1 { color: #6c7086; font-style: italic }
+/* CommentSpecial */ .chroma .cs { color: #6c7086; font-style: italic }
+/* CommentPreproc */ .chroma .cp { color: #6c7086; font-style: italic }
+/* CommentPreprocFile */ .chroma .cpf { color: #6c7086; font-weight: bold; font-style: italic }
+/* GenericDeleted */ .chroma .gd { color: #f38ba8; background-color: #313244 }
+/* GenericEmph */ .chroma .ge { font-style: italic }
+/* GenericError */ .chroma .gr { color: #f38ba8 }
+/* GenericHeading */ .chroma .gh { color: #fab387; font-weight: bold }
+/* GenericInserted */ .chroma .gi { color: #a6e3a1; background-color: #313244 }
+/* GenericStrong */ .chroma .gs { font-weight: bold }
+/* GenericSubheading */ .chroma .gu { color: #fab387; font-weight: bold }
+/* GenericTraceback */ .chroma .gt { color: #f38ba8 }
+/* GenericUnderline */ .chroma .gl { text-decoration: underline }
+</style>
 <h5>another one</h5>
 
 <p>And now here&rsquo;s some more cool stuff to wet your eyeballs. Here is a sample <a href="/home/myshkins/pics/synced_pics/selfie.jpeg">image</a>, showing me.</p>
