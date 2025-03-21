@@ -25,6 +25,10 @@ func GetIpAddr(r *http.Request) string {
 ```
 
 ##### another one
-And now here's some more cool stuff to wet your eyeballs. Here is a sample [image](/home/myshkins/pics/synced_pics/selfie.jpeg), showing me.
+And now here's some more cool stuff to wet your eyeballs.
+
+Here is a sample [image](/home/myshkins/pics/synced_pics/selfie.jpeg), showing me.
+
+<img src="https://ak0-io.us-east-1.linodeobjects.com/pixel-selfie.png" />
 
 Here is some **bold text** and some __italic text__. nice.

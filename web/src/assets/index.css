@@ -76,7 +76,7 @@ h1 {
 
 .logo {
   margin-left: 3rem;
-  height: clamp(90px, 15vh, 140px);
+  height: clamp(150px, 15vh, 140px);
   transition: all .1s ease-in;
 }
 
@@ -85,7 +85,7 @@ h1 {
 }
 
 .nav-links {
-  padding: 1rem 1rem 0rem 1rem;
+  padding: 1rem 1rem 1rem 1rem;
   list-style: none;
   display: flex;
   flex-direction: column;
