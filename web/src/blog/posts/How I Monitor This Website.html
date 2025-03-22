@@ -1,0 +1,31 @@
+<div class="titleblock">
+<h2>How I Monitor This Website</h2>
+<div class="subtitle">
+<p>Keeping metrics with Opentelemetry, Prometheus, and Grafana</p>
+<p>Published: 03/24/2025</p>
+</div>
+</div>
+
+<p>I&rsquo;ve spent a bit of time setting up some basic metric collection for this website. So here are a few notes on how I set things up.</p>
+
+<p>As a general overview, I&rsquo;m collecting metrics by instrumenting my webapp code with the Opentelemetry SDK. Those metrics are sent to an Opentelemetry collector. The collector then exports metrics to a Prometheus backend, and I&rsquo;ve set up a Grafana instance for visualizing the metrics.
+<img src="https://ak0-blog.us-lax-1.linodeobjects.com/ak0_monitoring_diagram.png" /></p>
+
+<p>Each of the components in that diagram lives in a docker container, and I deploy everything with docker compose.
+Isn&rsquo;t that a little complicated for a simple website like this? Yes it is. But I did it anyways for the sake of learning more about those technologies, and I did learn a few things. One big takeaway being that the whole process of integrating Opentelemetry with Prometheus feels a bit rough. If I were to do it again, I&rsquo;d probably skip Opentelemetry and just use Prometheus and Grafana.</p>
+
+<h4>Instrumentation</h4>
+
+<p>Instrumenting my webapp code with the Opentelemetry SDK was mostly a matter of following the otel documentation, although there were a few caveats.</p>
+
+<h4>Otel Collector</h4>
+
+<p>It collects things.</p>
+
+<h4>Prometheus Backend</h4>
+
+<p>I have a prometheus backend</p>
+
+<h4>Grafana</h4>
+
+<p>I did some cool visualization stuff</p>

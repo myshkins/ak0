@@ -27,12 +27,13 @@ read md post file in blog/posts
 conver to html
   if code block:
     use a node render hook and render with chroma
-write to web/src/pages
+write to web/src/blog/posts/
 */
 
 const (
+  dirPerms = 0777
   postDir = "../../blog/posts"
-  outDir = "../../web/src/pages/"
+  outDir = "../../web/src/blog/posts/"
   codeSyntaxStyle = "catppuccin-mocha"
 )
 
@@ -83,7 +84,6 @@ func renderHookCodeBlock(w io.Writer, node ast.Node, entering bool) (ast.WalkSta
   if !ok {
     return ast.GoToNext, false
   }
-  fmt.Println(string(codeNode.Info))
   renderedCode, err := renderCodeWithChroma(
     string(codeNode.Literal),
     string(codeNode.Info),
@@ -96,7 +96,7 @@ func renderHookCodeBlock(w io.Writer, node ast.Node, entering bool) (ast.WalkSta
 }
 
 func mdToHTML(md []byte) []byte {
-	extensions := parser.CommonExtensions | parser.NoEmptyLineBeforeBlock
+	extensions := parser.CommonExtensions | parser.NoEmptyLineBeforeBlock | parser.Attributes
 	p := parser.NewWithExtensions(extensions)
 	doc := p.Parse(md)
 
@@ -111,13 +111,19 @@ func mdToHTML(md []byte) []byte {
 }
 
 func main() {
- 
-
-  dirPath, err := helpers.ResolvePath(postDir)
+  absPostDirPath, err := helpers.ResolvePath(postDir)
   if err != nil {
-    fmt.Println(err.Error())
+    panic(err)
   }
-  filepath.Walk(dirPath, func(path string, info fs.FileInfo, err error) error {
+  absOutDir, err := helpers.ResolvePath(outDir)
+  if err != nil {
+    panic(err)
+  }
+  err = os.MkdirAll(absOutDir, dirPerms)
+  if err != nil {
+    panic(err)
+  }
+  filepath.Walk(absPostDirPath, func(path string, info fs.FileInfo, err error) error {
     if err != nil {
       fmt.Println(err)
       return err
@@ -129,12 +135,11 @@ func main() {
     // add .html extension
     name := strings.Split(info.Name(), ".")[0]
     name = strings.Join([]string{name, ".html"}, "")
-    dir, err := helpers.ResolvePath(outDir)
+    fp := filepath.Join(absOutDir, name)
+    err = os.WriteFile(fp, mdToHTML(bytes), 0644)
     if err != nil {
-      panic(err)
+      fmt.Println(err.Error())
     }
-    fp := filepath.Join(dir, name)
-    os.WriteFile(fp, mdToHTML(bytes), 0644)
     return nil
     },
   )

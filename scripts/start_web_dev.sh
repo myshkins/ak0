@@ -16,9 +16,14 @@ launch_reflex() {
     -R "cmd/ak0/dist" \
     -R "scripts" \
     -R "internal/handlers/dist" \
-    -R "web/src/pages" \
-    -s --verbose=true \
+    -R "web/src/blog" \
+    --verbose=true \
     -- sh -c './scripts/build_frontend.sh'
 }
 
-(trap 'kill 0' SIGINT; launch_live_server & launch_reflex & wait)
+launch_blog_reflex() {
+  cd /home/myshkins/coeus/coeus/blog/
+  reflex -v -- sh -C "${script_path}/build_frontend.sh"
+}
+
+(trap 'kill 0' SIGINT; launch_live_server & launch_reflex & launch_blog_reflex & wait)

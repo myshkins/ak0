@@ -13,10 +13,11 @@ go build -o blogger/blogger blogger/blogger.go
 cd "../web" >/dev/null
 
 # go build -
-# start with fresh directory
+# start with fresh directories
 rm -rf build/*
-mkdir -p ../cmd/ak0/dist/
-rm -rf "${outDir}*"
+rm -rf src/blog/posts/*
+mkdir -p "${outDir}"
+rm -rf "${outDir}"*
 mkdir -p build/assets/
 mkdir -p build/blog/
 
@@ -24,7 +25,6 @@ mkdir -p build/blog/
 ../scripts/blogger/blogger
 ../scripts/htmlbuilder/htmlbuilder
 
-# copy assets and index.html to build
 cp -r src/assets/* build/assets/
 
 # copy web/build to handler dir for go file embed

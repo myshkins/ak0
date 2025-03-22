@@ -25,8 +25,8 @@ const (
 	filePerms = 0666
   templatePath = "../../web/base_template.html"
   indexPath = "../../web/src/index.html"
-  blogPath = "../../web/src/blogIndex.html"
-  pagesDir = "../../web/src/pages/"
+  blogPath = "../../web/src/blog/index.html"
+  pagesDir = "../../web/src/blog/posts/"
   blogOutDir = "../../web/build/blog/"
   outDir = "../../web/build/"
   indexCss = "/assets/index.css"

@@ -1,4 +1,6 @@
 .blogpost {
+  display: flex;
+  flex-direction: column;
   margin: 0rem 3rem;
   width: 75%;
   max-width: 60rem;
@@ -13,3 +15,29 @@
   overflow-x: auto;
 }
 
+.blogpost h2 {
+  margin: 2rem 0 0;
+}
+
+.blogpost h4 {
+  margin: 2rem 0 0;
+}
+
+.blogpost p {
+  margin: 0 0 1rem 0;
+}
+
+.subtitle p {
+  margin: 0;
+}
+
+.subtitle {
+  color: var(--subtitle-color);
+  margin: 0 0 1rem;
+}
+
+.blogpost img {
+  margin: 1rem 0 0;
+  max-width: 100%;
+  height: auto;
+}
