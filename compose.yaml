@@ -70,9 +70,6 @@ services:
     restart: unless-stopped
     environment:
       - BASIC_AUTH=${BASIC_AUTH}
-      - CA_CERT=/etc/grafana/ak0_ca.crt
-      - CLIENT_CERT=/etc/grafana/grafana.crt
-      - CLIENT_KEY=/etc/grafana/grafana.key
       - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
       - GF_USERS_ALLOW_SIGN_UP=false

@@ -92,8 +92,7 @@ func newMeterProvider(r *resource.Resource) (*metric.MeterProvider, error) {
     metric.WithResource(r),
 		metric.WithReader(metric.NewPeriodicReader(
       metricExporter,
-      // todo: should maybe be 1m, change this
-			metric.WithInterval(5*time.Second))),
+			metric.WithInterval(30*time.Second))),
     metric.WithView(view),
 	)
 	return meterProvider, nil
