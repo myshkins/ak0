@@ -3,8 +3,6 @@ receivers:
     protocols:
       http:
         endpoint: 0.0.0.0:4318
-      # grpc:
-      #   endpoint: 0.0.0.0:4317
 
 processors:
   memory_limiter:
@@ -17,8 +15,8 @@ processors:
       send_batch_size: 100
 
 exporters:
-  debug:
-    verbosity: detailed
+  # debug:
+    # verbosity: detailed
 
   otlphttp:
     endpoint: http://prometheus:9090/api/v1/otlp

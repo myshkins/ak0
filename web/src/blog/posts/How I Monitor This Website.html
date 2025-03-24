@@ -6,26 +6,128 @@
 </div>
 </div>
 
-<p>I&rsquo;ve spent a bit of time setting up some basic metric collection for this website. So here are a few notes on how I set things up.</p>
+<p>I&rsquo;ve spent a bit of time setting up some basic metric collection for this website. So here are a few notes on how I put things together.</p>
 
 <p>As a general overview, I&rsquo;m collecting metrics by instrumenting my webapp code with the Opentelemetry SDK. Those metrics are sent to an Opentelemetry collector. The collector then exports metrics to a Prometheus backend, and I&rsquo;ve set up a Grafana instance for visualizing the metrics.
 <img src="https://ak0-blog.us-lax-1.linodeobjects.com/ak0_monitoring_diagram.png" /></p>
 
 <p>Each of the components in that diagram lives in a docker container, and I deploy everything with docker compose.
-Isn&rsquo;t that a little complicated for a simple website like this? Yes it is. But I did it anyways for the sake of learning more about those technologies, and I did learn a few things. One big takeaway being that the whole process of integrating Opentelemetry with Prometheus feels a bit rough. If I were to do it again, I&rsquo;d probably skip Opentelemetry and just use Prometheus and Grafana.</p>
+Isn&rsquo;t that a little complicated for a simple website like this? Couldn&rsquo;t I just use Google Analytics or something similar? Yes and yes. But I don&rsquo;t like the idea of passing off my data to a third party, and I wanted to learn more about these technologies, so that&rsquo;s what I did. One big learning from this was that the whole process of integrating Opentelemetry with Prometheus feels a bit rough. If I were to do it again, I&rsquo;d probably skip Opentelemetry and just use Prometheus and Grafana.</p>
 
 <h4>Instrumentation</h4>
 
-<p>Instrumenting my webapp code with the Opentelemetry SDK was mostly a matter of following the otel documentation, although there were a few caveats.</p>
+<p>Instrumenting my webapp code with the Opentelemetry SDK was mostly a matter of following the otel documentation, although there were a few caveats.
+Number one caveat was metric names. While these metrics are created in opentelemetry land, where a &ldquo;.&rdquo; is typically a separator between namespace levels, eg. <code>http_requests.server_duration</code>, these metrics are ultimately heading to Prometheus land where the lengua franca is promql and a &ldquo;.&rdquo; means $#@&amp;. I worked around this by renaming my metrics like so:</p>
+<pre class="chroma"><code><span class="line"><span class="ln"> 1</span><span class="cl"><span class="kd">func</span> <span class="nf">newMeterProvider</span><span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">resource</span><span class="p">.</span><span class="nx">Resource</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">metric</span><span class="p">.</span><span class="nx">MeterProvider</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">	<span class="nx">metricExporter</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">otlpmetrichttp</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nf">Background</span><span class="p">())</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">	<span class="kd">var</span> <span class="nx">view</span> <span class="nx">metric</span><span class="p">.</span><span class="nx">View</span> <span class="p">=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">i</span> <span class="nx">metric</span><span class="p">.</span><span class="nx">Instrument</span><span class="p">)</span> <span class="p">(</span><span class="nx">metric</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">		<span class="nx">s</span> <span class="o">:=</span> <span class="nx">metric</span><span class="p">.</span><span class="nx">Stream</span><span class="p">{</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">			<span class="nx">Name</span><span class="p">:</span>        <span class="nx">strings</span><span class="p">.</span><span class="nf">ReplaceAll</span><span class="p">(</span><span class="nx">i</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span> <span class="s">&#34;.&#34;</span><span class="p">,</span> <span class="s">&#34;_&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">			<span class="nx">Description</span><span class="p">:</span> <span class="nx">i</span><span class="p">.</span><span class="nx">Description</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">			<span class="nx">Unit</span><span class="p">:</span>        <span class="nx">i</span><span class="p">.</span><span class="nx">Unit</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">		<span class="k">return</span> <span class="nx">s</span><span class="p">,</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="ln">14</span><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">
+</span></span><span class="line"><span class="ln">16</span><span class="cl">	<span class="nx">meterProvider</span> <span class="o">:=</span> <span class="nx">metric</span><span class="p">.</span><span class="nf">NewMeterProvider</span><span class="p">(</span>
+</span></span><span class="line"><span class="ln">17</span><span class="cl">		<span class="nx">metric</span><span class="p">.</span><span class="nf">WithResource</span><span class="p">(</span><span class="nx">r</span><span class="p">),</span>
+</span></span><span class="line"><span class="ln">18</span><span class="cl">		<span class="nx">metric</span><span class="p">.</span><span class="nf">WithReader</span><span class="p">(</span><span class="nx">metric</span><span class="p">.</span><span class="nf">NewPeriodicReader</span><span class="p">(</span>
+</span></span><span class="line"><span class="ln">19</span><span class="cl">			<span class="nx">metricExporter</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">20</span><span class="cl">			<span class="nx">metric</span><span class="p">.</span><span class="nf">WithInterval</span><span class="p">(</span><span class="mi">30</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">))),</span>
+</span></span><span class="line"><span class="ln">21</span><span class="cl">		<span class="nx">metric</span><span class="p">.</span><span class="nf">WithView</span><span class="p">(</span><span class="nx">view</span><span class="p">),</span>
+</span></span><span class="line"><span class="ln">22</span><span class="cl">	<span class="p">)</span>
+</span></span><span class="line"><span class="ln">23</span><span class="cl">	<span class="k">return</span> <span class="nx">meterProvider</span><span class="p">,</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="ln">24</span><span class="cl"><span class="p">}</span>
+</span></span></code></pre><style>/* Background */ .bg { color: #cdd6f4; background-color: #1e1e2e; }
+/* PreWrapper */ .chroma { color: #cdd6f4; background-color: #1e1e2e; }
+/* LineNumbers targeted by URL anchor */ .chroma .ln:target { color: #cdd6f4; background-color: #45475a }
+/* LineNumbersTable targeted by URL anchor */ .chroma .lnt:target { color: #cdd6f4; background-color: #45475a }
+/* Error */ .chroma .err { color: #f38ba8 }
+/* LineLink */ .chroma .lnlinks { outline: none; text-decoration: none; color: inherit }
+/* LineTableTD */ .chroma .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
+/* LineTable */ .chroma .lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; }
+/* LineHighlight */ .chroma .hl { background-color: #45475a }
+/* LineNumbersTable */ .chroma .lnt { white-space: pre; -webkit-user-select: none; user-select: none; margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #7f849c }
+/* LineNumbers */ .chroma .ln { white-space: pre; -webkit-user-select: none; user-select: none; margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #7f849c }
+/* Line */ .chroma .line { display: flex; }
+/* Keyword */ .chroma .k { color: #cba6f7 }
+/* KeywordConstant */ .chroma .kc { color: #fab387 }
+/* KeywordDeclaration */ .chroma .kd { color: #f38ba8 }
+/* KeywordNamespace */ .chroma .kn { color: #94e2d5 }
+/* KeywordPseudo */ .chroma .kp { color: #cba6f7 }
+/* KeywordReserved */ .chroma .kr { color: #cba6f7 }
+/* KeywordType */ .chroma .kt { color: #f38ba8 }
+/* NameAttribute */ .chroma .na { color: #89b4fa }
+/* NameBuiltin */ .chroma .nb { color: #89dceb }
+/* NameBuiltinPseudo */ .chroma .bp { color: #89dceb }
+/* NameClass */ .chroma .nc { color: #f9e2af }
+/* NameConstant */ .chroma .no { color: #f9e2af }
+/* NameDecorator */ .chroma .nd { color: #89b4fa; font-weight: bold }
+/* NameEntity */ .chroma .ni { color: #94e2d5 }
+/* NameException */ .chroma .ne { color: #fab387 }
+/* NameFunction */ .chroma .nf { color: #89b4fa }
+/* NameFunctionMagic */ .chroma .fm { color: #89b4fa }
+/* NameLabel */ .chroma .nl { color: #89dceb }
+/* NameNamespace */ .chroma .nn { color: #fab387 }
+/* NameProperty */ .chroma .py { color: #fab387 }
+/* NameTag */ .chroma .nt { color: #cba6f7 }
+/* NameVariable */ .chroma .nv { color: #f5e0dc }
+/* NameVariableClass */ .chroma .vc { color: #f5e0dc }
+/* NameVariableGlobal */ .chroma .vg { color: #f5e0dc }
+/* NameVariableInstance */ .chroma .vi { color: #f5e0dc }
+/* NameVariableMagic */ .chroma .vm { color: #f5e0dc }
+/* LiteralString */ .chroma .s { color: #a6e3a1 }
+/* LiteralStringAffix */ .chroma .sa { color: #f38ba8 }
+/* LiteralStringBacktick */ .chroma .sb { color: #a6e3a1 }
+/* LiteralStringChar */ .chroma .sc { color: #a6e3a1 }
+/* LiteralStringDelimiter */ .chroma .dl { color: #89b4fa }
+/* LiteralStringDoc */ .chroma .sd { color: #6c7086 }
+/* LiteralStringDouble */ .chroma .s2 { color: #a6e3a1 }
+/* LiteralStringEscape */ .chroma .se { color: #89b4fa }
+/* LiteralStringHeredoc */ .chroma .sh { color: #6c7086 }
+/* LiteralStringInterpol */ .chroma .si { color: #a6e3a1 }
+/* LiteralStringOther */ .chroma .sx { color: #a6e3a1 }
+/* LiteralStringRegex */ .chroma .sr { color: #94e2d5 }
+/* LiteralStringSingle */ .chroma .s1 { color: #a6e3a1 }
+/* LiteralStringSymbol */ .chroma .ss { color: #a6e3a1 }
+/* LiteralNumber */ .chroma .m { color: #fab387 }
+/* LiteralNumberBin */ .chroma .mb { color: #fab387 }
+/* LiteralNumberFloat */ .chroma .mf { color: #fab387 }
+/* LiteralNumberHex */ .chroma .mh { color: #fab387 }
+/* LiteralNumberInteger */ .chroma .mi { color: #fab387 }
+/* LiteralNumberIntegerLong */ .chroma .il { color: #fab387 }
+/* LiteralNumberOct */ .chroma .mo { color: #fab387 }
+/* Operator */ .chroma .o { color: #89dceb; font-weight: bold }
+/* OperatorWord */ .chroma .ow { color: #89dceb; font-weight: bold }
+/* Comment */ .chroma .c { color: #6c7086; font-style: italic }
+/* CommentHashbang */ .chroma .ch { color: #6c7086; font-style: italic }
+/* CommentMultiline */ .chroma .cm { color: #6c7086; font-style: italic }
+/* CommentSingle */ .chroma .c1 { color: #6c7086; font-style: italic }
+/* CommentSpecial */ .chroma .cs { color: #6c7086; font-style: italic }
+/* CommentPreproc */ .chroma .cp { color: #6c7086; font-style: italic }
+/* CommentPreprocFile */ .chroma .cpf { color: #6c7086; font-weight: bold; font-style: italic }
+/* GenericDeleted */ .chroma .gd { color: #f38ba8; background-color: #313244 }
+/* GenericEmph */ .chroma .ge { font-style: italic }
+/* GenericError */ .chroma .gr { color: #f38ba8 }
+/* GenericHeading */ .chroma .gh { color: #fab387; font-weight: bold }
+/* GenericInserted */ .chroma .gi { color: #a6e3a1; background-color: #313244 }
+/* GenericStrong */ .chroma .gs { font-weight: bold }
+/* GenericSubheading */ .chroma .gu { color: #fab387; font-weight: bold }
+/* GenericTraceback */ .chroma .gt { color: #f38ba8 }
+/* GenericUnderline */ .chroma .gl { text-decoration: underline }
+</style>
+<p>Line #9 of the above is the key part to this. It&rsquo;s a relatively easy fix, but it definitely slowed me down a bit trying to figure out how and where to implement the fix.</p>
 
-<h4>Otel Collector</h4>
+<h4>Otel Collector and Prometheus Backend</h4>
 
-<p>It collects things.</p>
+<p>Another aspect of my setup worth noting is the use of the <code>otelhttp</code> exporter. Typically, Prometheus scrapes endpoints for metrics, and Opentelemetry provides a Prometheus Exporter for just that purpose. However, if , for example, you have a high availability setup with many instances of your app, you will end up with a lot of different metrics getting bottle-necked at that one scrape endpoint. The options for resolving this are either to use the Prometheus Remote-Write Exporter or to use the Otlphttp Exporter and the Prometheus native Otlp endpoint. I opted for the later because the only major difference seemed to be where the metric format conversion happens.  Either the otel collector converts the metrics before sending them, or prometheus does it when they are received. Part of the appeal of using opentelemetry is it being vendor agnostic. I should be able to store my metrics anywhere with my otel collector. So I thought it would make sense to keep it that way and let Prometheus handle the conversion.
+Here&rsquo;s another diagram that hopefully makes all this clearer:
+<img src="https://ak0-blog.us-lax-1.linodeobjects.com/ak0_monitoring_diagram_detail.png" /></p>
 
-<h4>Prometheus Backend</h4>
+<h4>Next steps</h4>
 
-<p>I have a prometheus backend</p>
-
-<h4>Grafana</h4>
-
-<p>I did some cool visualization stuff</p>
+<p>Overall, my observability setup is still very much a work in progress, but I&rsquo;ve enabled anonymous read-only access on my Grafana dashboard <a href="/grafana/d/eeer2i27cwm4gb/ak0-overview%3ForgId%3D1%26from%3Dnow-24h%26to%3Dnow%26timezone%3Dbrowser">here</a> for anyone weirdly bored enough to take a look. I plan on adding more metrics, and I&rsquo;d also like to set up some alerting for if and when any anomalies pop up.</p>

@@ -34,6 +34,7 @@ const (
   postCss = "/assets/post.css"
   )
 
+// add `Updated` field. would have to check if post file exists in git?
 type Html struct {
 		Fp    string
     Styles  []string

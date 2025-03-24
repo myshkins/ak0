@@ -55,7 +55,10 @@ func renderCodeWithChroma(source, language string) (string, error) {
 		style = styles.Fallback
 	}
 
-  formatter := chromaHtml.New(chromaHtml.WithClasses(true))
+  formatter := chromaHtml.New(
+    chromaHtml.WithClasses(true),
+    chromaHtml.WithLineNumbers(true),
+    )
   
   iterator, err := lexer.Tokenise(nil, source)
   if err != nil {

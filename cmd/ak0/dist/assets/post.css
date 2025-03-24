@@ -1,7 +1,7 @@
 .blogpost {
   display: flex;
   flex-direction: column;
-  margin: 0rem 3rem;
+  margin-inline: auto;
   width: 75%;
   max-width: 60rem;
 }
@@ -9,17 +9,14 @@
 .blogpost pre {
   margin: .5rem;
   padding: 1rem;
-  background: var(--code-bg);
+  background-color: #1e1e2e;
+  /* background: var(--code-bg); */
   border: 1px solid #32a1ce;
   border-radius: 8px;
   overflow-x: auto;
 }
 
 .blogpost h2 {
-  margin: 2rem 0 0;
-}
-
-.blogpost h4 {
   margin: 2rem 0 0;
 }
 
@@ -37,7 +34,14 @@
 }
 
 .blogpost img {
-  margin: 1rem 0 0;
+  margin: 2rem 0 1rem;
   max-width: 100%;
   height: auto;
+}
+
+/* for small code snip, not a code block */
+code {
+  padding: .05rem .2rem !important;
+  color: #cdd6f4;
+  background-color: #1e1e2e;
 }
