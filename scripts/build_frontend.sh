@@ -30,3 +30,4 @@ cp -r src/assets/* build/assets/
 # copy web/build to handler dir for go file embed
 cp -r build/* $outDir
 cp /home/myshkins/projects/job_search/resume/resume_Alex_Krenitsky.pdf "${outDir}assets/"
+cp robots.txt $outDir
