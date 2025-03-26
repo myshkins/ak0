@@ -3,7 +3,7 @@
     <img class="selfie" src="/assets/pixel-selfie.png" />
   </div>
   <div class="hero-desktop-text">
-    Hey, I'm Alex Krenitsky, a NYC public school teacher turned software
+    Hey, I'm Alex, a NYC public school teacher turned software
     developer. These are the things I've built. I'm always eager to connect, so 
     let me know if you like anything that you see!
   </div>
@@ -75,6 +75,27 @@
       <a href="/grafana/d/eeer2i27cwm4gb/ak0-overview%3ForgId%3D1%26from%3Dnow-24h%26to%3Dnow%26timezone%3Dbrowser"{GRAFANA_URL}>here</a>.
     </div>
   </div>
+  <!-- blog -->
+  <div class="project-card">
+    <a href="https://blog.ak0.io">
+      <h2>ak0 blog</h2>
+    </a>
+    <div class="project-card-inner">
+      <a href="https://ak0.io/blog">
+        <img class="project-card-img" src="https://ak0-blog.us-lax-1.linodeobjects.com/blog_screenshot.png"/>
+      </a>
+      I rebuilt my blog as a static site. I like the writing/development flow
+      I've set up for myself. I write a post in markdown, and it's automatically
+      parsed and rendered into a nice html page. That page is then included in the
+      file system that is embedded in my webapp server (along with all the other 
+      pages for my site). This makes both writing and serving the pages fast. 
+      You can see the code for my blog and this site 
+      <a href="https://github.com/myshkins/ak0">here</a>.
+      Previously this was a
+      <a href="https://github.com/myshkins/ak0_blog">Python Flask app</a>. 
+    </div>
+  </div>
+  <!-- airboo -->
   <div class="project-card">
     <a href="https://airboo.ak0.io">
       <h2>airboo</h2>
@@ -84,37 +105,19 @@
         <img class="project-card-img" src="https://ak0-io.us-east-1.linodeobjects.com/screenshot-airboo.webp"/>
       </a>
       *NOTE: the site is not live unfortunately, for cost saving reasons. Please 
-      check out the github repo.<br>My brother and I wanted to collaborate on a 
+      check out the 
+      <a href="https://github.com/myshkins/airboo">Github repo</a>.
+      <br>My brother and I wanted to collaborate on a 
       project, and us both being environmentalists at heart, we decided to 
       build an air quality monitoring app. The end goal is to create a platform 
       where users can compare air quality measurements they personally took with 
       air quality data provided by government agencies. We first started with 
       building the data pipeline and data visualization tool that you see 
       linked here. We used Apache Airflow to orchestrate our ELT data pipeline. 
-      Our api is built with FastAPI, and the front end is rendered with React. 
-      Click 
-      <a href="https://github.com/myshkins/airboo">here</a> 
-      to see the app, or the 
-      <a href="https://github.com/myshkins/airboo">Github repo</a> 
-      for this project.
+      Our api is built with FastAPI, and the front end is done with React. 
     </div>
   </div>
-  <div class="project-card">
-    <a href="https://blog.ak0.io">
-      <h2>ak0 blog</h2>
-    </a>
-    <div class="project-card-inner">
-      <a href="https://blog.ak0.io">
-        <img class="project-card-img" src="https://ak0-io.us-east-1.linodeobjects.com/screenshot-blog.webp"/>
-      </a>
-    I built a blog for recording all of the things I learn as I develop 
-    projects. It's build with Flask, Postgres, and SQLAlchemy, and it's deployed 
-    with Nginx, Gunicorn, and Docker. Check out the site 
-    <a href="https://blog.ak0.io">here</a> 
-    or see the 
-    <a href="https://github.com/myshkins/ak0_blog">Github repo</a>.
-    </div>
-  </div>
+  <!-- petwatch -->
   <div class="project-card">
     <a href="https://gopetwatch.ak0.io">
       <h2>pet-watch</h2>
@@ -140,6 +143,7 @@
       for this project. 
     </div>
   </div>
+  <!-- etch a sketch -->
   <div class="project-card">
     <a href="https://etch.ak0.io">
       <h2>etch-a-sketch</h2>
