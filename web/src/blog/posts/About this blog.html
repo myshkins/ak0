@@ -1,0 +1,23 @@
+<p><div class="titleblock">
+<h2>I rebuilt this blog</h2>
+<div class="subtitle">
+<p>My blog is all static now and it&rsquo;s great</p>
+<p>Published: 03/24/2025</p>
+</div>
+</div>
+I recently tore down my blog and rewrote it from scratch. The original was done while I was still relatively new to coding so there was a lot of room for improvement. I had made some poor design choices when creating it originally, the two main issues being that it was an app separate from my website and that it had a bad workflow for creating and publishing new posts. Not to mention it just felt plain clunky. So my goals in rewriting were:</p>
+
+<ul>
+<li>make the blog one with my main website</li>
+<li>make writing and publishing blog posts as smooth as possible</li>
+<li>simplify things and make it all just static pages
+I&rsquo;m fairly happy with how things have turned out so here is a quick rundown.
+When I want to create a post, I now just have to write the markdown and run my <code>deploy.sh</code> script. That script and the programs it calls will do the following:</li>
+<li>parse markdown files and convert them to html</li>
+<li>do some templating to add more html so it looks like part of my website (add navbar, styles, etc)</li>
+<li>rebuild the docker image for this webapp (which includes blog post pages)</li>
+<li>deploy the new image on my server
+Here&rsquo;s a diagram of it all:</li>
+</ul>
+
+<p>This is the first time I&rsquo;ve used Go&rsquo;s embed feature, and I&rsquo;m really loving it. I think it makes a lot of sense for this kind of use case. I&rsquo;ve been</p>
