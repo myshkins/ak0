@@ -37,6 +37,20 @@ while [ "$1" != "" ]; do
     shift
 done
 
+if [[ $(git branch --show-current) -ne "main" ]];then
+  echo "you're not on the main branch"
+  exit 1
+fi
+
+# check that remote branch is up to date
+git fetch origin
+if ! git diff --quiet HEAD origin/main; then
+    echo "local and remote branches out of sync"
+    echo "do a git push"
+    exit 1
+    # Your code for when branches are in sync
+fi
+
 docker_volume_flag=""
 if [[ "$remove_volumes" == "true" ]];then
   echo "will remove docker volumes"
