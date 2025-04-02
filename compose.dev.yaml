@@ -2,7 +2,7 @@ services:
   ak0:
     command: ak0 --env=dev
     volumes:
-      - ./dev.log:/ak0/ak0.log
+      - /var/log/ak0/ak0.log:/ak0/ak0.log
 
   grafana:
     environment:

@@ -12,27 +12,31 @@ import (
 
 const (
 	logPath  = "/ak0/ak0.log"
-	logMode  = os.O_APPEND | os.O_CREATE | os.O_WRONLY
+	logMode  = os.O_APPEND | os.O_WRONLY
 	logPerms = 0640
 )
 
 
 func NewLogger() (*slog.Logger, *os.File) {
 	out := os.Stdout
-	if os.Getenv("AK0_ENV") == "prod" {
+	// if os.Getenv("AK0_ENV") == "prod" {
 		// add retry logic in case of logratate race condition
-		for i := 0; i < 5; i++ {
-			time.Sleep(time.Duration(i) * 100 * time.Millisecond)
-			f, err := os.OpenFile(logPath, logMode, logPerms)
-			if err != nil {
-        fmt.Fprintf(os.Stderr, "\n %v - failed to open new log file after logrotate. error: %v", time.Now(), err.Error())
-				continue
-			}
-			out = f
-			break
-		}
+  for i := 0; i < 5; i++ {
+    time.Sleep(time.Duration(i) * 100 * time.Millisecond)
+    f, err := os.OpenFile(logPath, logMode, logPerms)
+    if err != nil && i == 4 {
+      fmt.Fprintf(os.Stderr, "\n %v - failed to open new log file after logrotate. error: %v", time.Now(), err.Error())
+      fmt.Fprintf(os.Stderr, "\n this was the last try. using stdout")
+      out = os.Stdout
+    }
+    if err != nil {
+      fmt.Fprintf(os.Stderr, "\n %v - failed to open new log file after logrotate. error: %v", time.Now(), err.Error())
+      continue
+    }
+    out = f
+    break
+  }
 
-	}
 	logger := slog.New(slog.NewJSONHandler(out, nil))
   slog.SetDefault(logger)
 	return logger, out
