@@ -24,13 +24,16 @@ func NewLogger() (*slog.Logger, *os.File) {
   for i := 0; i < 5; i++ {
     time.Sleep(time.Duration(i) * 100 * time.Millisecond)
     f, err := os.OpenFile(logPath, logMode, logPerms)
+    if err == nil {
+      fmt.Fprintf(os.Stdout, "\nopened new log file without error")
+    }
     if err != nil && i == 4 {
-      fmt.Fprintf(os.Stderr, "\n %v - failed to open new log file after logrotate. error: %v", time.Now(), err.Error())
-      fmt.Fprintf(os.Stderr, "\n this was the last try. using stdout")
+      fmt.Fprintf(os.Stdout, "\n %v - failed to open new log file after logrotate. error: %v", time.Now(), err.Error())
+      fmt.Fprintf(os.Stdout, "\n this was the last try. using stdout")
       out = os.Stdout
     }
     if err != nil {
-      fmt.Fprintf(os.Stderr, "\n %v - failed to open new log file after logrotate. error: %v", time.Now(), err.Error())
+      fmt.Fprintf(os.Stdout, "\n %v - failed to open new log file after logrotate. error: %v", time.Now(), err.Error())
       continue
     }
     out = f

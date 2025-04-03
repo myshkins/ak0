@@ -7,7 +7,7 @@
     delaycompress
     missingok
     notifempty
-    create 0640 65532 65532
+    create 0666 65532 65532
     olddir /var/log/ak0/old_logs
     su 65532 65532
     postrotate
