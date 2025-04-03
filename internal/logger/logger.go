@@ -20,17 +20,20 @@ const (
 func NewLogger() (*slog.Logger, *os.File) {
 	out := os.Stdout
 	// if os.Getenv("AK0_ENV") == "prod" {
-		// add retry logic in case of logratate race condition
+		// retry logic in case of logratate race condition
   for i := 0; i < 5; i++ {
     time.Sleep(time.Duration(i) * 100 * time.Millisecond)
     f, err := os.OpenFile(logPath, logMode, logPerms)
+    if err == nil {
+      fmt.Fprintf(os.Stdout, "\nopened new log file without error\n")
+    }
     if err != nil && i == 4 {
-      fmt.Fprintf(os.Stderr, "\n %v - failed to open new log file after logrotate. error: %v", time.Now(), err.Error())
-      fmt.Fprintf(os.Stderr, "\n this was the last try. using stdout")
+      fmt.Fprintf(os.Stdout, "\n %v - failed to open new log file after logrotate. error: %v", time.Now(), err.Error())
+      fmt.Fprintf(os.Stdout, "\n this was the last try. using stdout")
       out = os.Stdout
     }
     if err != nil {
-      fmt.Fprintf(os.Stderr, "\n %v - failed to open new log file after logrotate. error: %v", time.Now(), err.Error())
+      fmt.Fprintf(os.Stdout, "\n %v - failed to open new log file after logrotate. error: %v", time.Now(), err.Error())
       continue
     }
     out = f
@@ -58,12 +61,13 @@ func ListenForLogrotate(oldfile *os.File, ctx context.Context) {
         case syscall.SIGUSR1:
           fmt.Println("logger sigChan received USR1, rotating logs")
           slog.Info("logger sigChan received USR1, rotating logs")
-          l, f := NewLogger()
-          slog.SetDefault(l)
           err := oldfile.Close()
           if err != nil {
             fmt.Printf("\nak0 Logger: error closing old log file: %v\n", err.Error())
           }
+          fmt.Println("closed old file")
+          l, f := NewLogger()
+          slog.SetDefault(l)
           oldfile = f
         case syscall.SIGTERM, syscall.SIGINT:
           fmt.Println("logger sigChan received sigterm or sigint, shutting down")
