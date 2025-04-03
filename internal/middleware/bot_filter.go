@@ -33,6 +33,16 @@ const (
   IsBotKey contextKey = "isBot"
 )
 
+var maliciousPaths = []string{
+  ".aws",
+  ".env",
+  ".git",
+  ".php",
+  ".well-known",
+  "docker-compose",
+  "XDEBUG",
+}
+
 var meter = otel.Meter("github.com/myshkins/ak0")
 
 func NewBlockList() *BlockList {
@@ -82,12 +92,13 @@ func isBlocked(bl *BlockList, r *http.Request) bool {
 }
 
 func isMaliciousRequestPath(bl *BlockList, r *http.Request) bool {
-	// todo: check for other malicious paths
-	if strings.Contains(r.URL.Path, ".git") {
-		slog.Info("malicious request detected")
-		block(bl, helpers.GetIpAddr(r))
-		return true
-	}
+  for _, path := range maliciousPaths {
+    if strings.Contains(r.URL.Path, path) {
+      slog.Info("malicious request detected")
+      block(bl, helpers.GetIpAddr(r))
+      return true
+    }
+  }
 	return false
 }
 
