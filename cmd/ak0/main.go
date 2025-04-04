@@ -39,7 +39,7 @@ func NewServerHandler(
 	return handler
 }
 
-func run(ctx context.Context, w io.Writer, slogger *slog.Logger, args []string) error {
+func run(ctx context.Context, w io.Writer, args []string) error {
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
 	defer cancel()
 
@@ -75,7 +75,7 @@ func run(ctx context.Context, w io.Writer, slogger *slog.Logger, args []string) 
 	}()
 
 	<-ctx.Done()
-	slogger.Info("shutdown initiated")
+	slog.Info("shutdown initiated")
 	shutdownCtx := context.Background()
 	shutdownCtx, shutDownCancel := context.WithTimeout(shutdownCtx, 10*time.Second)
 	defer shutDownCancel()
@@ -84,12 +84,13 @@ func run(ctx context.Context, w io.Writer, slogger *slog.Logger, args []string) 
 		slog.Error(msg)
 	}
 
-	slogger.Info("server shutdown complete")
+	slog.Info("server shutdown complete")
 	return nil
 }
 
 func main() {
 	env := flag.String("env", "dev", "value to signal the type of environment to run in")
+	logPath := flag.String("log-file", "/ak0/ak0.log", "where to write logs")
 	flag.Parse()
 
 	err := os.Setenv("AK0_ENV", *env)
@@ -97,13 +98,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	slogger, logfile := logger.NewLogger()
-	loggerCtx := context.Background()
-	logger.ListenForLogrotate(logfile, loggerCtx)
+	logfile := logger.NewLogger(*logPath)
+	logger.ListenForLogrotate(*logPath, logfile, context.Background())
 
-	ctx := context.Background()
-	if err := run(ctx, os.Stdout, slogger, os.Args); err != nil {
-		slogger.Error(err.Error())
+	if err := run(context.Background(), os.Stdout, os.Args); err != nil {
+		slog.Error(err.Error())
 		os.Exit(1)
 	}
 }

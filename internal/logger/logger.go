@@ -11,13 +11,12 @@ import (
 )
 
 const (
-	logPath  = "/ak0/ak0.log"
 	logMode  = os.O_APPEND | os.O_WRONLY
 	logPerms = 0640
 )
 
 
-func NewLogger() (*slog.Logger, *os.File) {
+func NewLogger(logPath string) (*os.File) {
 	out := os.Stdout
 	// if os.Getenv("AK0_ENV") == "prod" {
 		// retry logic in case of logratate race condition
@@ -42,10 +41,10 @@ func NewLogger() (*slog.Logger, *os.File) {
 
 	logger := slog.New(slog.NewJSONHandler(out, nil))
   slog.SetDefault(logger)
-	return logger, out
+	return out
 }
 
-func ListenForLogrotate(oldfile *os.File, ctx context.Context) {
+func ListenForLogrotate(logPath string, oldfile *os.File, ctx context.Context) {
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGUSR1)
 
@@ -66,8 +65,10 @@ func ListenForLogrotate(oldfile *os.File, ctx context.Context) {
             fmt.Printf("\nak0 Logger: error closing old log file: %v\n", err.Error())
           }
           fmt.Println("closed old file")
-          l, f := NewLogger()
-          slog.SetDefault(l)
+          f := NewLogger(logPath)
+          i, err := f.Stat()
+          if err != nil {fmt.Println(err.Error())}
+          fmt.Printf("new log file stats: name: %v, %v, %v, %v, %+v\n", i.Name(), i.Size(), i.Mode(), i.ModTime(), i.Sys())
           oldfile = f
         case syscall.SIGTERM, syscall.SIGINT:
           fmt.Println("logger sigChan received sigterm or sigint, shutting down")
