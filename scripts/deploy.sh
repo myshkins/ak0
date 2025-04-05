@@ -71,9 +71,10 @@ if [[ "$build_image" == "true" ]];then
 fi
 
 pushd .. >/dev/null
-echo "copying .env to pgum"
+echo "copying .env and configs to pgum"
 scp -F /home/myshkins/.ssh/config ./.env "pgum:${run_dir}"
 scp -F /home/myshkins/.ssh/config ./configs/nginx.conf rpgum:/etc/nginx/conf.d/ak0.conf
+scp -F /home/myshkins/.ssh/config ./configs/logrotate rpgum:/etc/logrotate.d/ak0
 
 echo "executing deploy steps on pgum"
 

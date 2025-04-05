@@ -60,11 +60,20 @@ func ListenForLogrotate(logPath string, oldfile *os.File, ctx context.Context) {
         case syscall.SIGUSR1:
           fmt.Println("logger sigChan received USR1, rotating logs")
           slog.Info("logger sigChan received USR1, rotating logs")
-          err := oldfile.Close()
+          oi, err := oldfile.Stat()
+          if err != nil {fmt.Println(err.Error())}
+          fmt.Printf("old log file stats: name: %v, %v, %v, %v, %+v\n", oi.Name(), oi.Size(), oi.Mode(), oi.ModTime(), oi.Sys())
+
+          err = oldfile.Close()
           if err != nil {
             fmt.Printf("\nak0 Logger: error closing old log file: %v\n", err.Error())
+          } else {
+            fmt.Println("successfully closed old file")
           }
-          fmt.Println("closed old file")
+
+          // sleep to allow time for logrotate to finish
+          time.Sleep(2000 * time.Millisecond)
+
           f := NewLogger(logPath)
           i, err := f.Stat()
           if err != nil {fmt.Println(err.Error())}
