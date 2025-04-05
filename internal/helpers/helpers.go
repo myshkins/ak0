@@ -20,8 +20,9 @@ func GetIpAddr(r *http.Request) string {
 	return ip
 }
 
-func ResolvePath(relativePath string) (string, error) {
-  _, filename, _, ok := runtime.Caller(0)
+// turns a relative path into an absolute one
+func MakeRelPathAbs(relativePath string) (string, error) {
+  _, filename, _, ok := runtime.Caller(1)
   if !ok {
     return "", fmt.Errorf("error getting source file path")
   }

@@ -114,11 +114,11 @@ func mdToHTML(md []byte) []byte {
 }
 
 func main() {
-  absPostDirPath, err := helpers.ResolvePath(postDir)
+  absPostDirPath, err := helpers.MakeRelPathAbs(postDir)
   if err != nil {
     panic(err)
   }
-  absOutDir, err := helpers.ResolvePath(outDir)
+  absOutDir, err := helpers.MakeRelPathAbs(outDir)
   if err != nil {
     panic(err)
   }

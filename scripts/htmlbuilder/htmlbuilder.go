@@ -43,7 +43,7 @@ type Html struct {
 	}
 
 func main() {
-  tp, err := helpers.ResolvePath(templatePath)
+  tp, err := helpers.MakeRelPathAbs(templatePath)
   if err != nil {
     panic(err)
   }
@@ -54,11 +54,11 @@ func main() {
 
 	var bodies []Html
 
-  dirpath, err := helpers.ResolvePath(pagesDir)
+  dirpath, err := helpers.MakeRelPathAbs(pagesDir)
   if err != nil {
     panic(err)
   }
-  absOutdir, err := helpers.ResolvePath(outDir)
+  absOutdir, err := helpers.MakeRelPathAbs(outDir)
     if err != nil {
       panic(err)
     }
@@ -69,7 +69,7 @@ func main() {
   // web/build/blog/eachpost/
   // use file system as url naviagtion
   // each dir contains an index.html
-  absBlgOutDir, err := helpers.ResolvePath(blogOutDir)
+  absBlgOutDir, err := helpers.MakeRelPathAbs(blogOutDir)
   if err != nil {
     panic(err)
   }
@@ -91,7 +91,7 @@ func main() {
 				return nil
 			}
       name := strings.Split(info.Name(), ".")[0]
-      postOutDir, err := helpers.ResolvePath(filepath.Join(blogOutDir, name))
+      postOutDir, err := helpers.MakeRelPathAbs(filepath.Join(blogOutDir, name))
       if err != nil {
         panic(err)
       }
@@ -114,7 +114,7 @@ func main() {
 	}
 
   // handle index.html
-  ifp, err := helpers.ResolvePath(indexPath)
+  ifp, err := helpers.MakeRelPathAbs(indexPath)
   if err != nil {
     panic(err)
   }
@@ -131,7 +131,7 @@ func main() {
   )
 
   // handle blogIndex.html
-  bfp, err := helpers.ResolvePath(blogPath)
+  bfp, err := helpers.MakeRelPathAbs(blogPath)
   if err != nil {
     panic(err)
   }
