@@ -57,14 +57,11 @@ func ListenForLogrotate(logPath string, oldfile *os.File, ctx context.Context) {
       case sig := <-sigChan:
         // either usr1 or sigterm or sigint
         switch sig {
-        case syscall.SIGUSR1:
+        case syscall.SIGUSR1:  // this isn't used, just restaring container now
           fmt.Println("logger sigChan received USR1, rotating logs")
           slog.Info("logger sigChan received USR1, rotating logs")
-          oi, err := oldfile.Stat()
-          if err != nil {fmt.Println(err.Error())}
-          fmt.Printf("old log file stats: name: %v, %v, %v, %v, %+v\n", oi.Name(), oi.Size(), oi.Mode(), oi.ModTime(), oi.Sys())
 
-          err = oldfile.Close()
+          err := oldfile.Close()
           if err != nil {
             fmt.Printf("\nak0 Logger: error closing old log file: %v\n", err.Error())
           } else {
@@ -72,12 +69,9 @@ func ListenForLogrotate(logPath string, oldfile *os.File, ctx context.Context) {
           }
 
           // sleep to allow time for logrotate to finish
-          time.Sleep(2000 * time.Millisecond)
+          time.Sleep(100 * time.Millisecond)
 
           f := NewLogger(logPath)
-          i, err := f.Stat()
-          if err != nil {fmt.Println(err.Error())}
-          fmt.Printf("new log file stats: name: %v, %v, %v, %v, %+v\n", i.Name(), i.Size(), i.Mode(), i.ModTime(), i.Sys())
           oldfile = f
         case syscall.SIGTERM, syscall.SIGINT:
           fmt.Println("logger sigChan received sigterm or sigint, shutting down")

@@ -9,7 +9,7 @@
     create 0666 65532 65532
     olddir /var/log/ak0/old_logs
     su 65532 65532
-    prerotate
-        su - iceking -c "docker kill --signal=USR1 ak0"
+    postrotate
+        su - iceking -c "docker restart ak0"
     endscript
 }
