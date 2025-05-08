@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"context"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"sync"
@@ -29,13 +31,24 @@ func NewClientRateLimiters() *ClientRateLimiters {
 	return &crl
 }
 
-func CleanupRateLimiters(crl *ClientRateLimiters) {
+func CleanupRateLimiters(ctx context.Context, crl *ClientRateLimiters) {
+  ticker := time.NewTicker(time.Minute * 1)
+  defer ticker.Stop()
+
 	for {
-		for k, v := range crl.ClientLimiters {
-			if time.Since(v.lastSeen) > time.Minute*3 {
-				delete(crl.ClientLimiters, k)
-			}
-		}
+    select {
+    case <-ticker.C:
+      for k, v := range crl.ClientLimiters {
+        if time.Since(v.lastSeen) > time.Minute*3 {
+          delete(crl.ClientLimiters, k)
+        }
+      }
+    case <-ctx.Done():
+      fmt.Println("closing CleanupRateLimiters")
+      slog.Info("closing CleanupRateLimiters")
+      return
+  }
+		
 		time.Sleep(time.Minute * 1)
 	}
 }

@@ -109,7 +109,7 @@ func FilterBots(bl *BlockList, h http.Handler) http.Handler {
 		metric.WithUnit("{call}"),
 	)
 	if err != nil {
-		msg := fmt.Sprintf("failed to create botCounter: ", err)
+		msg := fmt.Sprint("failed to create botCounter: ", err)
 		slog.Error(msg)
 	}
 	maliciousBotCounter, err := meter.Int64Counter(
@@ -118,7 +118,7 @@ func FilterBots(bl *BlockList, h http.Handler) http.Handler {
 		metric.WithUnit("{call}"),
 	)
 	if err != nil {
-		msg := fmt.Sprintf("failed to create maliciousBotCounter: ", err)
+		msg := fmt.Sprint("failed to create maliciousBotCounter: ", err)
 		slog.Error(msg)
 	}
 
@@ -128,7 +128,7 @@ func FilterBots(bl *BlockList, h http.Handler) http.Handler {
 		metric.WithUnit("{call}"),
 	)
 	if err != nil {
-		msg := fmt.Sprintf("failed to create humanCounter: ", err)
+		msg := fmt.Sprint("failed to create humanCounter: ", err)
 		slog.Error(msg)
 	}
 

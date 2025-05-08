@@ -40,16 +40,16 @@ func SetupOTelSDK(ctx context.Context) (shutdown func(context.Context) error, er
 	prop := newPropagator()
 	otel.SetTextMapPropagator(prop)
 
-	r, err := resource.Merge(
-		resource.Default(),
-		resource.NewWithAttributes(
-			semconv.SchemaURL,
-			semconv.ServiceName("ak0"),
-		),
-	)
-	if err != nil {
-		return nil, err
-	}
+  r, err := resource.Merge(
+    resource.Default(),
+    resource.NewWithAttributes(
+      semconv.SchemaURL,
+      semconv.ServiceName("ak0"),
+      ),
+    )
+  if err != nil {
+    return nil, err
+  }
 
 	// Set up meter provider.
 	meterProvider, err := newMeterProvider(r)
@@ -71,29 +71,30 @@ func newPropagator() propagation.TextMapPropagator {
 }
 
 func newMeterProvider(r *resource.Resource) (*metric.MeterProvider, error) {
-	// todo: double check this
-	metricExporter, err := otlpmetrichttp.New(context.Background())
+  // todo: double check this
+  metricExporter, err := otlpmetrichttp.New(context.Background())
 	if err != nil {
 		return nil, err
 	}
 
-	var view metric.View = func(i metric.Instrument) (metric.Stream, bool) {
-		// In a custom View function, you need to explicitly copy
-		// the name, description, and unit.
-		s := metric.Stream{
-			Name:        strings.ReplaceAll(i.Name, ".", "_"),
-			Description: i.Description,
-			Unit:        i.Unit,
-		}
-		return s, true
-	}
+  var view metric.View = func(i metric.Instrument) (metric.Stream, bool) {
+	// In a custom View function, you need to explicitly copy
+	// the name, description, and unit.
+	s := metric.Stream{
+      Name: strings.ReplaceAll(i.Name, ".", "_"),
+      Description: i.Description,
+      Unit: i.Unit,
+    }
+	return s, true
+  }
 
 	meterProvider := metric.NewMeterProvider(
-		metric.WithResource(r),
+    metric.WithResource(r),
 		metric.WithReader(metric.NewPeriodicReader(
-			metricExporter,
+      metricExporter,
 			metric.WithInterval(30*time.Second))),
-		metric.WithView(view),
+    metric.WithView(view),
 	)
 	return meterProvider, nil
 }
+

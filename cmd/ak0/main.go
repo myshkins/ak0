@@ -35,7 +35,6 @@ func NewServerHandler(
 	addRoutes(mux, blockList, clientRateLimiters, staticFiles)
 	handler := otelhttp.NewHandler(mux, "/")
 
-	go middleware.CleanupRateLimiters(clientRateLimiters) // move this to run?
 	return handler
 }
 
@@ -50,7 +49,7 @@ func run(ctx context.Context, w io.Writer, args []string) error {
 	}
 
 	defer func() {
-		err = errors.Join(err, otelShutdown(context.Background()))
+		err = errors.Join(err, otelShutdown(ctx))
 	}()
 
 	crl := middleware.NewClientRateLimiters()
@@ -64,6 +63,8 @@ func run(ctx context.Context, w io.Writer, args []string) error {
 		Addr:    net.JoinHostPort("0.0.0.0", "8200"),
 		Handler: srv,
 	}
+
+	go middleware.CleanupRateLimiters(ctx, crl)
 
 	go func() {
 		msg := fmt.Sprintf("listening on %v\n", httpServer.Addr)

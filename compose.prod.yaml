@@ -7,4 +7,4 @@ services:
   grafana:
     environment:
       - GF_SERVER_ROOT_URL=https://ak0.io/grafana
-      - GF_SERVER_SERVE_FROM_SUB_PATH = true
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
