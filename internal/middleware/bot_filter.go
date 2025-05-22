@@ -54,16 +54,28 @@ func NewBlockList() *BlockList {
 	return &blocklist
 }
 
-func CleanupBlocklist(bl *BlockList) {
+func CleanupBlocklist(ctx context.Context, bl *BlockList) {
+  ticker := time.NewTicker(time.Hour * 1)
+  defer ticker.Stop()
+
 	for {
-		for k, v := range bl.BlockedRateLimiters {
-			if time.Since(v.lastSeen) > time.Hour*24 {
-				delete(bl.BlockedRateLimiters, k)
-			}
-		}
+    select {
+    case <-ticker.C:
+      for k, v := range bl.BlockedRateLimiters {
+        if time.Since(v.lastSeen) > time.Hour*240 {
+          delete(bl.BlockedRateLimiters, k)
+        }
+      }
+    case <-ctx.Done():
+      fmt.Println("closing CleanupBlocklist")
+      slog.Info("closing CleanupBlocklist")
+      return
+  }
+		
 		time.Sleep(time.Minute * 1)
 	}
 }
+
 
 func block(bl *BlockList, ip string) {
 	bl.Mu.Lock()
