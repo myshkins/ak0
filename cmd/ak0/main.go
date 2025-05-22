@@ -38,9 +38,12 @@ func NewServerHandler(
 	return handler
 }
 
-func run(ctx context.Context, w io.Writer, args []string) error {
+func run(ctx context.Context, lp string, w io.Writer, args []string) error {
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
 	defer cancel()
+
+  logfile := logger.NewLogger(lp)
+	logger.ListenForLogrotate(lp, logfile, context.Background())
 
 	// set up otel
 	otelShutdown, err := metrics.SetupOTelSDK(ctx)
@@ -64,6 +67,7 @@ func run(ctx context.Context, w io.Writer, args []string) error {
 		Handler: srv,
 	}
 
+	go middleware.CleanupBlocklist(ctx, bl)
 	go middleware.CleanupRateLimiters(ctx, crl)
 
 	go func() {
@@ -99,11 +103,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	logfile := logger.NewLogger(*logPath)
-	logger.ListenForLogrotate(*logPath, logfile, context.Background())
 
-	if err := run(context.Background(), os.Stdout, os.Args); err != nil {
-		slog.Error(err.Error())
+	if err := run(context.Background(), *logPath, os.Stdout, os.Args); err != nil {
+    fmt.Println(err.Error())
 		os.Exit(1)
 	}
 }

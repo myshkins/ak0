@@ -48,8 +48,6 @@ func CleanupRateLimiters(ctx context.Context, crl *ClientRateLimiters) {
       slog.Info("closing CleanupRateLimiters")
       return
   }
-		
-		time.Sleep(time.Minute * 1)
 	}
 }
 

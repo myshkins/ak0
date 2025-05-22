@@ -71,8 +71,6 @@ func CleanupBlocklist(ctx context.Context, bl *BlockList) {
       slog.Info("closing CleanupBlocklist")
       return
   }
-		
-		time.Sleep(time.Minute * 1)
 	}
 }
 

@@ -10,7 +10,7 @@ image_name="ak0"
 
 ./build_frontend.sh
 
-if docker ps -aq | grep "${image_name}" >/dev/null 2>&1; then
+if docker ps -a | grep "${image_name}" >/dev/null 2>&1; then
   echo "There are some existing containers. Prob wanna remove em first"
   exit 1
 fi
