@@ -43,7 +43,7 @@ func run(ctx context.Context, lp string, w io.Writer, args []string) error {
 	defer cancel()
 
   logfile := logger.NewLogger(lp)
-	logger.ListenForLogrotate(lp, logfile, context.Background())
+	logger.ListenForLogrotate(lp, logfile, ctx)
 
 	// set up otel
 	otelShutdown, err := metrics.SetupOTelSDK(ctx)
@@ -102,7 +102,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 
 	if err := run(context.Background(), *logPath, os.Stdout, os.Args); err != nil {
     fmt.Println(err.Error())
