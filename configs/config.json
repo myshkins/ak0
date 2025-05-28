@@ -2,7 +2,7 @@
   "prod": {
     "serverAddress": "0.0.0.0",
     "port": "8200",
-    "logPath": "/var/log/ak0/ak0.log",
+    "logPath": "/ak0/ak0.log",
     "enableOtel": true
   },
   "dev": {
