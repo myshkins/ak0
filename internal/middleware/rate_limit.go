@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"net/http"
 	"sync"
@@ -44,7 +43,6 @@ func CleanupRateLimiters(ctx context.Context, crl *ClientRateLimiters) {
         }
       }
     case <-ctx.Done():
-      fmt.Println("closing CleanupRateLimiters")
       slog.Info("closing CleanupRateLimiters")
       return
   }

@@ -6,8 +6,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/myshkins/ak0/internal/helpers"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp"
+	"go.opentelemetry.io/otel/metric/noop"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/sdk/resource"
@@ -16,7 +18,7 @@ import (
 
 // setupOTelSDK bootstraps the OpenTelemetry pipeline.
 // If it does not return an error, make sure to call shutdown for proper cleanup.
-func SetupOTelSDK(ctx context.Context) (shutdown func(context.Context) error, err error) {
+func SetupOTelSDK(ctx context.Context, cfg helpers.Config) (shutdown func(context.Context) error, err error) {
 	var shutdownFuncs []func(context.Context) error
 
 	// shutdown calls cleanup functions registered via shutdownFuncs.
@@ -52,13 +54,18 @@ func SetupOTelSDK(ctx context.Context) (shutdown func(context.Context) error, er
   }
 
 	// Set up meter provider.
-	meterProvider, err := newMeterProvider(r)
-	if err != nil {
-		handleErr(err)
-		return
-	}
-	shutdownFuncs = append(shutdownFuncs, meterProvider.Shutdown)
-	otel.SetMeterProvider(meterProvider)
+  if cfg.EnableOtel {
+    meterProvider, err := newMeterProvider(r)
+    if err != nil {
+      handleErr(err)
+      return shutdown, err
+    }
+    shutdownFuncs = append(shutdownFuncs, meterProvider.Shutdown)
+    otel.SetMeterProvider(meterProvider)
+  } else {
+    meterProvider := noop.NewMeterProvider()
+    otel.SetMeterProvider(meterProvider)
+  }
 
 	return
 }

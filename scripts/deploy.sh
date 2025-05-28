@@ -73,6 +73,7 @@ fi
 pushd .. >/dev/null
 echo "copying .env and configs to pgum"
 scp -F /home/myshkins/.ssh/config ./.env "pgum:${run_dir}"
+scp -F /home/myshkins/.ssh/config ./config.json "pgum:${run_dir}"
 scp -F /home/myshkins/.ssh/config ./configs/nginx.conf rpgum:/etc/nginx/conf.d/ak0.conf
 scp -F /home/myshkins/.ssh/config ./configs/logrotate rpgum:/etc/logrotate.d/ak0
 

@@ -1,6 +1,6 @@
 services:
   ak0:
-    command: ak0 --env=dev
+    command: ak0 --env=dev --config-file="/config.json"
     volumes:
       - /var/log/ak0/ak0.log:/ak0/ak0.log
 

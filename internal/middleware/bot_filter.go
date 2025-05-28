@@ -67,7 +67,6 @@ func CleanupBlocklist(ctx context.Context, bl *BlockList) {
         }
       }
     case <-ctx.Done():
-      fmt.Println("closing CleanupBlocklist")
       slog.Info("closing CleanupBlocklist")
       return
   }

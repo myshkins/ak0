@@ -10,6 +10,8 @@ services:
     environment:
       - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://otelcol:4318/v1/metrics
       - OTEL_RESOURCE_ATTRIBUTES="service.name=ak0,service.version=0.0.1"
+    volumes:
+      - ./config.json:/config.json
     security_opt:
       - apparmor=unconfined
     depends_on:
