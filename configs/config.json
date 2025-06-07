@@ -9,6 +9,6 @@
     "serverAddress": "0.0.0.0",
     "port": "8200",
     "logPath": "stdout",
-    "enableOtel": true
+    "enableOtel": false
   }
 }

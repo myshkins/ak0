@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"sync"
 	"syscall"
 	"time"
 
@@ -42,9 +43,12 @@ func run(ctx context.Context, cfg helpers.Config,) error {
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
 	defer cancel()
 
+  var wg sync.WaitGroup
+
   lp := cfg.LogPath
   logfile := logger.NewLogger(lp)
-	go logger.ListenForLogrotate(lp, logfile, ctx)
+  wg.Add(1)
+	go logger.ListenForLogrotate(ctx, &wg, lp, logfile)
 
 	// set up otel
 	otelShutdown, err := metrics.SetupOTelSDK(ctx, cfg)
@@ -68,8 +72,10 @@ func run(ctx context.Context, cfg helpers.Config,) error {
 		Handler: srv,
 	}
 
-	go middleware.CleanupBlocklist(ctx, bl)
-	go middleware.CleanupRateLimiters(ctx, crl)
+  wg.Add(1)
+	go middleware.CleanupBlocklist(ctx, &wg, bl)
+  wg.Add(1)
+	go middleware.CleanupRateLimiters(ctx, &wg, crl)
 
 	go func() {
 		msg := fmt.Sprintf("listening on %v", httpServer.Addr)
@@ -91,6 +97,7 @@ func run(ctx context.Context, cfg helpers.Config,) error {
 	}
 
 	slog.Info("server shutdown complete")
+  wg.Wait()
 	return nil
 }
 

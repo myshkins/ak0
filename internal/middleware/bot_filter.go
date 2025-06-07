@@ -54,7 +54,7 @@ func NewBlockList() *BlockList {
 	return &blocklist
 }
 
-func CleanupBlocklist(ctx context.Context, bl *BlockList) {
+func CleanupBlocklist(ctx context.Context, wg *sync.WaitGroup, bl *BlockList) {
   ticker := time.NewTicker(time.Hour * 1)
   defer ticker.Stop()
 
@@ -68,6 +68,7 @@ func CleanupBlocklist(ctx context.Context, bl *BlockList) {
       }
     case <-ctx.Done():
       slog.Info("closing CleanupBlocklist")
+      wg.Done()
       return
   }
 	}

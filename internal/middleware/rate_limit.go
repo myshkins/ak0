@@ -30,7 +30,7 @@ func NewClientRateLimiters() *ClientRateLimiters {
 	return &crl
 }
 
-func CleanupRateLimiters(ctx context.Context, crl *ClientRateLimiters) {
+func CleanupRateLimiters(ctx context.Context, wg *sync.WaitGroup, crl *ClientRateLimiters) {
   ticker := time.NewTicker(time.Minute * 1)
   defer ticker.Stop()
 
@@ -44,6 +44,7 @@ func CleanupRateLimiters(ctx context.Context, crl *ClientRateLimiters) {
       }
     case <-ctx.Done():
       slog.Info("closing CleanupRateLimiters")
+      wg.Done()
       return
   }
 	}

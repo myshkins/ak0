@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"sync"
 	"time"
 )
 
@@ -40,7 +41,7 @@ func NewLogger(logPath string) (*os.File) {
 	return out
 }
 
-func ListenForLogrotate(logPath string, oldfile *os.File, ctx context.Context) {
+func ListenForLogrotate(ctx context.Context, wg *sync.WaitGroup,logPath string, oldfile *os.File) {
   slog.Info("logger listening for signal...")
 
   <- ctx.Done()
@@ -50,5 +51,6 @@ func ListenForLogrotate(logPath string, oldfile *os.File, ctx context.Context) {
   if err != nil {
     fmt.Printf("\nak0 Logger: error closing old log file: %v\n", err.Error())
   }
+  wg.Done()
   return
 }
