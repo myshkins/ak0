@@ -34,7 +34,7 @@ const (
   postCss = "/assets/post.css"
   )
 
-// add `Updated` field. would have to check if post file exists in git?
+// todo: add `Updated` field. would have to check if post file exists in git?
 type Html struct {
 		Fp    string
     Styles  []string
@@ -77,9 +77,8 @@ func main() {
   if err != nil {
     panic(err)
   }
-  // gotta fix walkdir to write to separate dirs
 
-  // walk src/pages dir, add fp and content to bodies[]
+  // walk src/blog/posts dir, create Htmml with fp and content, add to bodies[]
 	err = filepath.Walk(
     dirpath,
 		func(path string, info fs.FileInfo, err error) error {
