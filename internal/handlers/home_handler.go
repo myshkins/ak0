@@ -3,7 +3,9 @@ package handlers
 import (
 	"embed"
 	"io/fs"
+	"log/slog"
 	"net/http"
+	"os"
 
 	"github.com/myshkins/ak0/internal/middleware"
 	"go.opentelemetry.io/otel"
@@ -20,7 +22,8 @@ func HandleHome(static *embed.FS) http.Handler {
 		metric.WithUnit("{call}"),
 	)
 	if err != nil {
-		panic(err)
+    slog.Error("fatal error", "error", err)
+    os.Exit(1)
 	}
 
 	botHomeRequestCounter, err := meter.Int64Counter(
@@ -29,7 +32,8 @@ func HandleHome(static *embed.FS) http.Handler {
 		metric.WithUnit("{call}"),
 	)
 	if err != nil {
-		panic(err)
+    slog.Error("fatal error", "error", err)
+    os.Exit(1)
 	}
 
 	humanHomeRequestCounter, err := meter.Int64Counter(
@@ -38,12 +42,13 @@ func HandleHome(static *embed.FS) http.Handler {
 		metric.WithUnit("{call}"),
 	)
 	if err != nil {
-		panic(err)
-	}
+	  slog.Error("fatal error", "error", err)
+    os.Exit(1)}
 
   staticFiles, err := fs.Sub(*static, "dist")
   if err != nil {
-    panic(err)
+    slog.Error("fatal error", "error", err)
+    os.Exit(1)
   }
 	fs := http.FileServer(http.FS(staticFiles))
 

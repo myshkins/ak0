@@ -3,7 +3,7 @@ package helpers
 import (
   "encoding/json"
   "errors"
-  "log"
+  "log/slog"
   "os"
 )
 
@@ -26,7 +26,8 @@ func LoadConfig(path, env string) (Config, error){
 
   var cfg map[string]json.RawMessage
   if err = json.Unmarshal(data, &cfg); err != nil {
-      log.Fatal("Error parsing JSON:", err)
+      slog.Error("Fatal error parsing json", "error", err)
+      os.Exit(1)
   }
   err = json.Unmarshal(cfg[env], &c)
   if err != nil {

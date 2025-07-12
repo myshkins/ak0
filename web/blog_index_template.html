@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
-    
+    {{range .Styles}}<link rel="stylesheet" href="{{.}}" />{{"\n    "}}{{end}}
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Alex Krenitsky</title>
   </head>
@@ -21,9 +21,7 @@
     </div>
     <div class="app">
       <ul class="blog-post-list">
-        <li><a href="/blog/About this blog">About this blog</a></li>
-        <li><a href="/blog/How I Monitor This Website">How I Monitor This Website</a></li>
-        
+        {{range .Posts}}<li><a href="/blog/{{.}}">{{.}}</a></li>{{"\n        "}}{{end}}
       </ul>
     </div>
   </body>

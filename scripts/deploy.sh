@@ -10,10 +10,12 @@ run_dir=/home/iceking/.local/ak0
 checkout_dir=/home/iceking/apps/ak0
 build_image="true"
 remove_volumes="false"
+build_blog="false"
 
 usage() {
   echo "Usage: ./deploy.sh [options]"
   echo "  --no-image-build    skip building the ak0 image"
+  echo "  --blog-build        build the blog pages"
   echo "  --remove-volumes    remove the docker volumes on pgum"
   exit 1
 }
@@ -28,6 +30,9 @@ while [ "$1" != "" ]; do
             ;;
         --remove-volumes)
             remove_volumes="true"
+            ;;
+        --build-blog)
+            build_blog="true"
             ;;
         *)
             usage
@@ -55,6 +60,10 @@ docker_volume_flag=""
 if [[ "$remove_volumes" == "true" ]];then
   echo "will remove docker volumes"
   docker_volume_flag="-v"
+fi
+
+if [[ "$build_blog" == "true" ]];then
+# todo: add this logic
 fi
 
 if [[ "$build_image" == "true" ]];then
