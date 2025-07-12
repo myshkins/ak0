@@ -62,9 +62,9 @@ if [[ "$remove_volumes" == "true" ]];then
   docker_volume_flag="-v"
 fi
 
-if [[ "$build_blog" == "true" ]];then
-# todo: add this logic
-fi
+# if [[ "$build_blog" == "true" ]];then
+# # todo: add this logic
+# fi
 
 if [[ "$build_image" == "true" ]];then
   # todo: fix error handling
