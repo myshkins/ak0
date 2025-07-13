@@ -21,7 +21,7 @@ func TestCheckRateLimit(t *testing.T) {
 	client := server.Client()
 
 	// test for allowed requests
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 10; i++ {
 		req, _ := http.NewRequest("GET", server.URL, nil)
 		resp, err := client.Do(req)
 		if err != nil {

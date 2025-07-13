@@ -8,8 +8,6 @@ echo ""
 echo "running build_image.sh"
 image_name="ak0"
 
-./build_frontend.sh
-
 if docker ps -a | grep "${image_name}" >/dev/null 2>&1; then
   echo "There are some existing containers. Prob wanna remove em first"
   exit 1
@@ -25,6 +23,23 @@ if [[ -n $(git status --porcelain ) ]]; then
         * ) echo "please answer yes or no.";;
     esac
 done
+fi
+
+./build_frontend.sh
+
+if ! git diff --quiet; then
+    echo "Changes detected after frontend build."
+    echo -n "Amend the last commit? (y/n): "
+    read -r response
+
+    if [[ "$response" =~ ^[Yy]$ ]]; then
+        git -C .. add .
+        git commit --amend --no-edit
+        git push -f
+        echo "Last commit amended with build changes"
+    else
+        echo "Skipping commit amendment"
+    fi
 fi
 
 if docker image ls "${image_name}" | grep "${image_name}" >/dev/null 2>&1; then

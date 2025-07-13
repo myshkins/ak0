@@ -114,7 +114,6 @@ func main() {
 				return nil
 			}
 			name := strings.Split(info.Name(), ".")[0]
-			fmt.Printf("post name is: %s\n", name)
 			biContent.Posts = append(biContent.Posts, name)
 			postOutDir, err := helpers.MakeRelPathAbs(filepath.Join(blogOutDir, name))
 			if err != nil {

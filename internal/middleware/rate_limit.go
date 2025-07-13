@@ -16,6 +16,7 @@ type ClientRateLimiter struct {
 	limiter  *rate.Limiter
 	lastSeen time.Time
 }
+
 type ClientRateLimiters struct {
 	ClientLimiters map[string]*ClientRateLimiter // {"client_ipaddr": ClientRateLimiter}
 	Mu             sync.Mutex
@@ -31,7 +32,7 @@ func NewClientRateLimiters() *ClientRateLimiters {
 }
 
 func CleanupRateLimiters(ctx context.Context, wg *sync.WaitGroup, crl *ClientRateLimiters) {
-	ticker := time.NewTicker(time.Minute * 1)
+	ticker := time.NewTicker(time.Minute * 2)
 	defer ticker.Stop()
 
 	for {

@@ -1,5 +1,4 @@
 **/node_modules/
-**dist/
 build/*
 .env
 cmd/ak0/ak0
