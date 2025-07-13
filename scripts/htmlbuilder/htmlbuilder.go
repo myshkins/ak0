@@ -32,6 +32,7 @@ const (
 	blogOutDir            = "../../web/build/blog/"
 	outDir                = "../../web/build/"
 	indexCss              = "/assets/index.css"
+	blogIndexCss          = "/assets/blogIndex.css"
 	homeCss               = "/assets/home.css"
 	postCss               = "/assets/post.css"
 )
@@ -76,7 +77,7 @@ func main() {
 
 	var bodies []PostContent
 
-	var biContent BlogIndexContent
+  biContent := BlogIndexContent{Styles: []string{indexCss, blogIndexCss}}
 
 	dirpath, err := helpers.MakeRelPathAbs(pagesDir)
 	if err != nil {

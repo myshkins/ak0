@@ -20,9 +20,11 @@
         </ul>
     </div>
     <div class="app">
-      <ul class="blog-post-list">
-        {{range .Posts}}<li><a href="/blog/{{.}}">{{.}}</a></li>{{"\n        "}}{{end}}
-      </ul>
+      <div class="blog-index">
+        <ul class="blog-post-list">
+          {{range .Posts}}<li><a href="/blog/{{.}}">{{.}}</a></li>{{"\n        "}}{{end}}
+        </ul>
+      </div>
     </div>
   </body>
 </html>
