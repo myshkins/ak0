@@ -31,22 +31,24 @@ func NewClientRateLimiters() *ClientRateLimiters {
 }
 
 func CleanupRateLimiters(ctx context.Context, wg *sync.WaitGroup, crl *ClientRateLimiters) {
-  ticker := time.NewTicker(time.Minute * 1)
-  defer ticker.Stop()
+	ticker := time.NewTicker(time.Minute * 1)
+	defer ticker.Stop()
 
 	for {
-    select {
-    case <-ticker.C:
-      for k, v := range crl.ClientLimiters {
-        if time.Since(v.lastSeen) > time.Minute*3 {
-          delete(crl.ClientLimiters, k)
-        }
-      }
-    case <-ctx.Done():
-      slog.Info("closing CleanupRateLimiters")
-      wg.Done()
-      return
-  }
+		select {
+		case <-ticker.C:
+			crl.Mu.Lock()
+			for k, v := range crl.ClientLimiters {
+				if time.Since(v.lastSeen) > time.Minute*3 {
+					delete(crl.ClientLimiters, k)
+				}
+			}
+			crl.Mu.Unlock()
+		case <-ctx.Done():
+			slog.Info("closing CleanupRateLimiters")
+			wg.Done()
+			return
+		}
 	}
 }
 
