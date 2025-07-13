@@ -85,7 +85,7 @@ func getLimiter(crl *ClientRateLimiters, ip string) *rate.Limiter {
 	}
 
 	r := ClientRateLimiter{
-		limiter:  rate.NewLimiter(20, 100),
+		limiter:  rate.NewLimiter(3, 10),
 		lastSeen: time.Now(),
 	}
 	crl.ClientLimiters[ip] = &r
