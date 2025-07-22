@@ -1,11 +1,13 @@
 **/node_modules/
 build/*
+tofu/.terraform/
+*.tfvars
+*tfstate*
 .env
 cmd/ak0/ak0
 !ak0/
 dev.log
 examples.nix
-configs/certs/*
 result
 web/vite.config.js.timestamp-*
 prompt
