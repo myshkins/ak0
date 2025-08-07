@@ -41,6 +41,7 @@ locals {
       hostname = "ak0_lb"
       public_interface_primary = true
       firewall_id = linode_firewall.lb-firewall.id
+      vpc_ip = "10.0.0.2"
     }
     "master" = {
       label = "ak0-master-node-0",
@@ -48,6 +49,7 @@ locals {
       hostname = "prismo"
       public_interface_primary = true
       firewall_id = linode_firewall.k8-node-firewall.id
+      vpc_ip = "10.0.0.3"
     }
     "worker0" = {
       label = "ak0-worker-node-0"
@@ -55,6 +57,7 @@ locals {
       hostname = "gunter0"
       public_interface_primary = true
       firewall_id = linode_firewall.k8-node-firewall.id
+      vpc_ip = "10.0.0.4"
     }
     "worker1" = {
       label = "ak0-worker-node-1"
@@ -62,6 +65,7 @@ locals {
       hostname = "gunter1"
       public_interface_primary = true
       firewall_id = linode_firewall.k8-node-firewall.id
+      vpc_ip = "10.0.0.5"
     }
   }
 }
@@ -100,14 +104,15 @@ resource "linode_instance" "ak0-vm" {
     purpose   = "public"
     subnet_id = linode_vpc_subnet.ak0-vpc-subnet.id
     primary = each.value.public_interface_primary
-    # ipv4 {}
   }
 
   interface {
     purpose   = "vpc"
     subnet_id = linode_vpc_subnet.ak0-vpc-subnet.id
     primary = !each.value.public_interface_primary
-    # ipv4 {}
+    ipv4 {
+      vpc = each.value.vpc_ip
+    }
   }
 }
 

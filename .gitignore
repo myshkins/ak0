@@ -14,3 +14,7 @@ prompt
 prompt.txt
 scripts/blogger/blogger
 scripts/htmlbuilder/htmlbuilder
+*.crt
+*.key
+*.csr
+*.srl
