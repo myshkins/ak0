@@ -18,3 +18,8 @@ scripts/htmlbuilder/htmlbuilder
 *.key
 *.csr
 *.srl
+*kubeconfgs/
+*.kubeconfig
+kube-api-server.conf
+worker-node-0.conf
+worker-node-1.conf

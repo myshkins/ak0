@@ -24,6 +24,6 @@ extendedKeyUsage     = clientAuth, serverAuth
 keyUsage             = critical, digitalSignature, keyEncipherment
 nsCertType           = client
 nsComment            = "worker-node-1 Certificate"
-subjectAltName       = DNS:worker-node-1, IP:127.0.0.1
+subjectAltName       = DNS:$WORKER_NODE_1_HOSTNAME, IP:127.0.0.1
 subjectKeyIdentifier = hash
 
