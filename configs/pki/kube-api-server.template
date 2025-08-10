@@ -16,14 +16,13 @@ L  = Fremont
 [kube-api-server_alt_names]
 IP.0  = 127.0.0.1
 IP.1  = 10.32.0.1
-IP.2  = 172.235.60.88
+IP.2  = $LOAD_BALANCER_IP
 DNS.0 = kubernetes
 DNS.1 = kubernetes.default
 DNS.2 = kubernetes.default.svc
 DNS.3 = kubernetes.default.svc.cluster
 DNS.4 = kubernetes.svc.cluster.local
-DNS.5 = server.kubernetes.local
-DNS.6 = api-server.kubernetes.local
+DNS.5 = $MASTER_NODE_0_HOSTNAME.kubernetes.local
 
 [kube-api-server_req_extensions]
 basicConstraints     = CA:FALSE

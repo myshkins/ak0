@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 script=$(readlink -f "$0")
 script_path=$(dirname "$script")
-cd $script_path
+cd "$script_path"
 
 
 set -e
@@ -29,7 +29,11 @@ certs=(
   "service-accounts"
 )
 
-for i in ${certs[*]}; do
+for i in "${certs[@]}"; do
+  if [[ -f "${i}.template" ]]; then
+    echo "writing conf for ${i}"
+    envsubst < "${i}.template" > "${i}.conf"
+  fi
   echo "generating ${i} key"
   openssl genrsa -out "certs/${i}.key" 4096
 
@@ -51,15 +55,14 @@ for i in ${certs[*]}; do
     -in "certs/${i}.csr" \
     -CA "certs/ca.crt" \
     -CAkey "certs/ca.key" \
-    -extfile "admin.conf" \
-    -extensions admin_req_extensions \
+    -extfile "${i}.conf" \
+    -extensions "${i}_req_extensions" \
     -out "certs/${i}.crt"
 done
 
-# chmod 600 certs/private/ak0_ca.key
-# chmod 600 certs/ak0_ca.crt
+chmod 600 certs/*.key
+chmod 644 certs/*.crt
 
-# chown 65534:65534 certs/prometheus.crt
 
 echo ""
 echo "yay, certificate generation complete"
