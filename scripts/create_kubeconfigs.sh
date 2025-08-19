@@ -4,7 +4,7 @@ script_path=$(dirname "$script")
 
 set -e
 
-cd "$script_path"
+cd "${script_path}/../configs/pki"
 
 source ../../.env
 

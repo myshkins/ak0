@@ -92,8 +92,9 @@ output "host_file_content" {
 
 output "linode_ips" {
   value = {
-    for key, vm in linode_instance.ak0-vm : key => vm.private_ip_address
+    for key, vm in linode_instance.ak0-vm : key => vm.ip_address
   }
+  sensitive = true
 }
 
 resource "linode_stackscript" "ak0-vm-init-script" {
@@ -103,12 +104,13 @@ resource "linode_stackscript" "ak0-vm-init-script" {
 #!/bin/bash
 # <UDF name="hostname" label="hostname" default="ak0">
 # <UDF name="host_file_content" label="host_file_content" default="added by tofu">
+touch /root/ak0up
 apt-get -q update && apt-get -q -y upgrade
 apt-get install kitty-terminfo
 hostnamectl set-hostname "$HOSTNAME"
 echo -e "\nadded by tofu\n$HOST_FILE_CONTENT" >> /etc/hosts
-sed -i -e 's/^#Port 22$/Port 40020/' -e 's/^PasswordAuthentication yes$/PasswordAuthentication no/' /etc/ssh/sshd_config
-systemctl restart ssh
+# sed -i -e 's/^#Port 22$/Port 40020/' -e 's/^PasswordAuthentication yes$/PasswordAuthentication no/' /etc/ssh/sshd_config
+# systemctl restart ssh
 EOF
   images = ["linode/debian12"]
   rev_note = "initial version"

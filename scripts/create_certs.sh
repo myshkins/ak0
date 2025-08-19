@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 script=$(readlink -f "$0")
 script_path=$(dirname "$script")
-cd "$script_path"
-
 
 set -e
+
+cd "${script_path}/../configs/pki"
+
+source ../../.env
 
 echo ""
 echo "running create_certs.sh"
 
-source ../../.env
 
 rm -f ./certs/*
 

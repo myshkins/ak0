@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 script=$(readlink -f "$0")
 script_path=$(dirname "$script")
-cd "$script_path"
 
 set -e
+
+source .env
+
+cd "$script_path"
+
 
 echo ""
 echo "running export_certs.sh"
 
-source ../../.env
 
 # copy certs to worker nodes
 for host in $WORKER_NODE_0_HOSTNAME $WORKER_NODE_1_HOSTNAME; do
