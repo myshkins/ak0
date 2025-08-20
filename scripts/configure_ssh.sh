@@ -23,7 +23,7 @@ nodes=(
 entries=""
 
 for host in "${nodes[@]}"; do
-  ip_addr=$(tofu output -json linode_ips | jq ".$host")
+  ip_addr=$(tofu output -json linode_ips | jq -r ".$host")
   entries+=$(cat <<EOF
 Host $host
   Hostname $ip_addr

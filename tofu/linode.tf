@@ -104,13 +104,15 @@ resource "linode_stackscript" "ak0-vm-init-script" {
 #!/bin/bash
 # <UDF name="hostname" label="hostname" default="ak0">
 # <UDF name="host_file_content" label="host_file_content" default="added by tofu">
-touch /root/ak0up
-apt-get -q update && apt-get -q -y upgrade
-apt-get install kitty-terminfo
+echo "$HOSTNAME" > /root/ak0hostname
+echo "$HOST_FILE_CONTENT" >> /root/ak0hosts
+printf '\nadded by tofu\n%s\n' "$HOST_FILE_CONTENT" >> /etc/hosts
 hostnamectl set-hostname "$HOSTNAME"
-echo -e "\nadded by tofu\n$HOST_FILE_CONTENT" >> /etc/hosts
-# sed -i -e 's/^#Port 22$/Port 40020/' -e 's/^PasswordAuthentication yes$/PasswordAuthentication no/' /etc/ssh/sshd_config
-# systemctl restart ssh
+sed -i -e 's/^#Port 22$/Port 40020/' -e 's/^PasswordAuthentication yes$/PasswordAuthentication no/' /etc/ssh/sshd_config
+systemctl restart ssh
+apt-get -q update
+apt-get -q -y upgrade
+apt-get install -y kitty-terminfo
 EOF
   images = ["linode/debian12"]
   rev_note = "initial version"
