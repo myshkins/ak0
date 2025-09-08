@@ -1,0 +1,16 @@
+[Unit]
+Description=Kubernetes Kubelet
+Documentation=https://github.com/kubernetes/kubernetes
+After=crio.service
+Requires=crio.service
+
+[Service]
+ExecStart=/usr/local/bin/kubelet \
+  --config=/etc/kubernetes/kubelet-config.yaml \
+  --kubeconfig=/etc/kubernetes/kubelet.conf \
+  --v=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

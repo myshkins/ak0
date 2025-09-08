@@ -12,7 +12,7 @@ prompt             = no
 req_extensions     = worker-node-1_req_extensions
 
 [worker-node-1_distinguished_name]
-CN = system:node:worker-node-1
+CN = system:node:$WORKER_NODE_1_HOSTNAME
 O  = system:nodes
 C  = US
 ST = California

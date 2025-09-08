@@ -6,14 +6,14 @@ variable "linode_api_key" {
 
 variable "nixmo_ssh_pub_key" {
   description = "nixmo ssh pub key"
-  type = string
-  sensitive = false
+  type        = string
+  sensitive   = false
 }
 
 variable "nixabun_ssh_pub_key" {
   description = "nixabun ssh pub key"
-  type = string
-  sensitive = false
+  type        = string
+  sensitive   = false
 }
 
 variable "load_balancer_hostname" {

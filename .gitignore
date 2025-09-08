@@ -3,7 +3,6 @@
 *.key
 *.csr
 *.srl
-*kubeconfgs/
 *.kubeconfig
 *.tfvars
 *tfstate*
@@ -14,7 +13,9 @@ build/*
 cmd/ak0/ak0
 dev.log
 examples.nix
+infrastructure/configs/kubeconfgs/
 infrastructure/vendor/crio/bin/crio
+infrastructure/vendor/kubernetes/
 kube-api-server.conf
 prompt
 prompt.txt

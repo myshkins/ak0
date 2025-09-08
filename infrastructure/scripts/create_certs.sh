@@ -4,9 +4,9 @@ script_path=$(dirname "$script")
 
 set -e
 
-cd "${script_path}/../../configs/pki"
+cd "${script_path}/../../configs/kubernetes/pki"
 
-source ../../.env
+source ../../../.env
 
 echo ""
 echo "running create_certs.sh"
