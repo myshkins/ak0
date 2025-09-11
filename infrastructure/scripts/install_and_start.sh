@@ -14,11 +14,12 @@ echo "running install.sh"
 download_dir="/root/downloads"
 bin_dir="/usr/local/bin"
 kubernetes_dir="/etc/kubernetes"
+kubernetes_pki_dir="/etc/kubernetes/pki"
 
 nodes=(
     "$MASTER_NODE_0_HOSTNAME"
-    "$WORKER_NODE_0_HOSTNAME" 
-    "$WORKER_NODE_1_HOSTNAME"
+    # "$WORKER_NODE_0_HOSTNAME" 
+    # "$WORKER_NODE_1_HOSTNAME"
     # "$LOAD_BALANCER_HOSTNAME"
 )
 
@@ -27,7 +28,7 @@ for host in "${nodes[@]}"; do
   scp bashrc "$host:/root/.bashrc"
 
   if [[ "$host" != "$LOAD_BALANCER_HOSTNAME" ]];then
-    ssh "$host" mkdir -p $download_dir $kubernetes_dir
+    ssh "$host" mkdir -p $download_dir $kubernetes_dir $kubernetes_pki_dir
 
     scp ../../configs/kubernetes/pki/kubeconfigs/kube-proxy.conf \
       "${host}:${kubernetes_dir}/kube-proxy.conf"
@@ -43,28 +44,25 @@ for host in "${nodes[@]}"; do
     done
 EOF
 
-    if [[ "$host" != "$MASTER_NODE_0_HOSTNAME" ]];then
-      scp "../../configs/kubernetes/pki/kubeconfigs/${host}.conf" \
-        "${host}:${kubernetes_dir}/kubelet.conf"
-    fi
-
     if [[ $host = "$MASTER_NODE_0_HOSTNAME" ]]; then
-      scp ../../configs/kubernetes/pki/kubeconfigs/kube-controller-manager.conf \
+      scp ../../configs/kubernetes/pki/certs/ca.crt \
+        ../../configs/kubernetes/pki/certs/ca.key \
+        ../../configs/kubernetes/pki/kubeconfigs/kube-controller-manager.conf \
         ../../configs/kubernetes/pki/kubeconfigs/kube-proxy.conf \
         ../../configs/kubernetes/pki/kubeconfigs/kube-scheduler.conf \
         ../../configs/kubernetes/encryption-config.yaml "${host}:${download_dir}/"
 
       ssh "$host" << EOF
       set -e
-      mv "${download_dir}"/kube-proxy.conf \
-        "${download_dir}"/kube-controller-manager.conf \
-        "${download_dir}"/kube-scheduler.conf "$kubernetes_dir"
+      mv "${download_dir}/ca.crt" "${download_dir}/ca.key" "$kubernetes_pki_dir"
+      mv "${download_dir}/kube-proxy.conf" \
+        "${download_dir}/kube-controller-manager.conf" \
+        "${download_dir}/kube-scheduler.conf" "$kubernetes_dir"
 
       export ENCRYPTION_KEY="$(head -c 32 /dev/urandom | base64)"
       envsubst < "${download_dir}"/encryption-config.yaml \
         > "${kubernetes_dir}/encryption-config.yaml"
 EOF
-
     fi
 
     # copy up crio, crun, and conmon
@@ -100,7 +98,8 @@ EOF
     scp ../vendor/kubernetes/kubelet \
       ../../configs/kubernetes/kubelet.service \
       ../../configs/kubernetes/kubeapi-to-kubelet.yaml \
-      ../../configs/kubernetes/kubelet-config.yaml "${host}:${download_dir}"
+      ../../configs/kubernetes/kubelet-config.yaml \
+      "../../configs/kubernetes/pki/kubeconfigs/${host}.conf" "${host}:${download_dir}"
 
     ssh "$host" << EOF
     set -e
@@ -108,11 +107,12 @@ EOF
     mv "${download_dir}/kubelet.service" /etc/systemd/system/
     mv "${download_dir}/kubelet-config.yaml" /tmp/
     mv "${download_dir}/kubeapi-to-kubelet.yaml" "${kubernetes_dir}"
+    mv "${download_dir}/${host}.conf" "${kubernetes_dir}/kubelet.conf"
 EOF
     ssh "$host" << 'EOF'
     set -e
     export KUBELET_INTERNAL_NODE_IP=$(ip addr show eth1 | grep -oP 'inet \K[0-9.]+' | head -1)
-    envsubst < /tmp/kubelet-config.yaml > /var/lib/kubernetes/kubelet-config.yaml
+    envsubst < /tmp/kubelet-config.yaml > /etc/kubernetes/kubelet-config.yaml
     systemctl daemon-reload
     systemctl enable --now kubelet.service
 EOF

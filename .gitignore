@@ -13,7 +13,7 @@ build/*
 cmd/ak0/ak0
 dev.log
 examples.nix
-infrastructure/configs/kubeconfgs/
+configs/kubernetes/pki/kubeconfigs
 infrastructure/vendor/crio/bin/crio
 infrastructure/vendor/kubernetes/
 kube-api-server.conf

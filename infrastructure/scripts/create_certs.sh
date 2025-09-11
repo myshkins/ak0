@@ -21,6 +21,7 @@ openssl req -x509 -new -sha512 -nodes -key certs/ca.key -days 3653 -config ca.co
 
 certs=(
   "admin"
+  "master-node-0"
   "worker-node-0"
   "worker-node-1"
   "kube-proxy"

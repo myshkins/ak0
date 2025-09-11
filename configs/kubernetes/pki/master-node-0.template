@@ -1,0 +1,21 @@
+[req]
+distinguished_name = master-node-0_distinguished_name
+prompt             = no
+req_extensions     = master-node-0_req_extensions
+
+[master-node-0_distinguished_name]
+CN = system:node:$MASTER_NODE_0_HOSTNAME
+O  = system:nodes
+C  = US
+ST = California
+L  = Fremont
+
+[master-node-0_req_extensions]
+basicConstraints     = CA:FALSE
+extendedKeyUsage     = clientAuth, serverAuth
+keyUsage             = critical, digitalSignature, keyEncipherment
+nsCertType           = client
+nsComment            = "master-node-0 client certificate"
+subjectAltName       = DNS:$MASTER_NODE_0_HOSTNAME, IP:127.0.0.1
+subjectKeyIdentifier = hash
+

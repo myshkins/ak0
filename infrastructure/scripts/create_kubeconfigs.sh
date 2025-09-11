@@ -8,12 +8,13 @@ cd "${script_path}/../../configs/kubernetes/pki"
 
 source ../../../.env
 
-rm -f ../../configs/kubernetes/pki/kubeconfigs/*
+rm -f kubeconfigs/*
 
 cluster=ak0-cluster
 
 declare -A hostmap
 
+hostmap["${MASTER_NODE_0_HOSTNAME}"]=master-node-0
 hostmap["${WORKER_NODE_0_HOSTNAME}"]=worker-node-0
 hostmap["${WORKER_NODE_1_HOSTNAME}"]=worker-node-1
 
